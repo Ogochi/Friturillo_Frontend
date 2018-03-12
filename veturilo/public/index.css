@@ -1,0 +1,12 @@
+body {
+  background-image: url("bg.jpg");
+  background-size: 100%;
+  background-size: cover;
+}
+
+#root {
+  width: 90%;
+  margin: 1em 5% 1em 5%;
+  position: absolute;
+  top: 0;
+}
