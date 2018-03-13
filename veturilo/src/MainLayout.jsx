@@ -3,30 +3,17 @@ import PropTypes from 'prop-types';
 import Divider from 'material-ui/Divider';
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
+import Drawer from 'material-ui/Drawer';
 
-let screenHeight = window.innerHeight || 
-  document.documentElement.clientHeight || 
-  document.getElementByTagName('body')[0].clientHeight;
-let screenWidth = window.innerWidth || 
-  document.documentElement.clientWidth || 
-  document.getElementByTagName('body')[0].clientWidth;
-
-const shadow = {
-  "box-shadow": "0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.5)",
-  marginTop: 10,
-  backgroundColor: "white",
-  height: "70%",
-  width: "100%",
-  minHeight: screenHeight * 65 / 100 - 10,
-};
-
-const logo = {
+const drawerWidth = 200;
+const logoMargin = 20;
+const logoStyle = {
+  width: drawerWidth - logoMargin,
   display: "block",
-  margin: "0 auto",
-  "object-fit": "fill",
-  width: screenWidth * 7 / 10,
-  height: screenHeight * 3 / 10,
-  backgroundColor: "red",
+  marginLeft: "auto",
+  marginRight: "auto",
+  marginTop: "1em",
+  marginBottom: "1em",
 };
 
 class MainLayout extends Component {
@@ -43,10 +30,17 @@ class MainLayout extends Component {
     const kontakt = props => <Link to="/kontakt" {...props} />;
     
     return (
-      <div style={{marginBottom: 0}}>
-        <img style={logo} src="logo.png" />
+      <div style={{margin: "0 0 0 0"}}>
         
-        <div style={shadow}>
+        
+        <Drawer variant="permanent" anchor="left">
+          <div style={{width: drawerWidth, height: "100%", display: "block"}}>
+            <img style={logoStyle} src="logo.png" />
+            <Divider />
+          </div>
+        </Drawer>
+        
+        <div style={{marginLeft: drawerWidth}}>
           <div style={{textAlign: "center"}}>
             <Button style={{width: "15em"}} component={glowna}>Strona Główna</Button>
             <Button style={{width: "15em"}} component={trasa}>Wyszukaj Trasę</Button>
@@ -62,7 +56,7 @@ class MainLayout extends Component {
 }
 
 MainLayout.propTypes = {
-  children: PropTypes.element
+  children: PropTypes.element,
 };
 
 export default MainLayout;
