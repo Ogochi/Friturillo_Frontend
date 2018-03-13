@@ -63,7 +63,7 @@ class App extends Component {
                 onChange={this.onInputChange('destination')}
               />
             </ListItem>
-            { this.state.start != "" && this.state.destination != "" &&
+            { this.state.start !== "" && this.state.destination !== "" &&
             <ListItem>
               <Button 
                 style={{marginLeft: "auto", marginRight: "auto"}} 
