@@ -3,6 +3,8 @@ import Paper from 'material-ui/Paper';
 import Input from 'material-ui/Input';
 import Button from 'material-ui/Button';
 import List, { ListItem } from 'material-ui/List';
+import converter from 'xml-js';
+import axios from 'axios';
 
 const paperStyle = {
   marginTop: "10%", 
@@ -32,6 +34,25 @@ class App extends Component {
     this.setState({
       height:  windowHeight - barHeight,
     });
+    
+    axios.get(`http://api.nextbike.net/maps/nextbike-official.xml?city=210`)
+      .then(res => {
+        if (res.statusText === "OK") {
+          let stations = JSON.parse(
+            converter.xml2json(res.data, {compact: true, spaces: 4}))
+              .markers.country.city.place;
+          let stationsNames = stations.map(s => ({
+            name: s._attributes.name
+          }));
+          let names = "";
+          stationsNames.forEach(s => {
+            names += s.name + "\n";
+          });
+          alert(names);
+        } else {
+          alert("Error - failed to download stations data!");
+        }
+      });
   }
   
   onInputChange = name => event => {
