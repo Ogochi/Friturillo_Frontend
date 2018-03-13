@@ -42,11 +42,9 @@ class MainLayout extends Component {
     const stacje = props => <Link to="/stacje" {...props} />;
     
     return (
-      <div style={{margin: "0 0 0 0"}}>
-        
-        
+      <div style={{margin: "0 0 0 0", height: "100%", width: "100%", position: "absolute"}}>  
         <Drawer variant="permanent" anchor="left">
-          <div style={{width: drawerWidth, height: "900%", display: "block"}}>
+          <div style={{width: drawerWidth, height: "100%", display: "block"}}>
             <img style={logoStyle} src="logo.png" alt="E l i t a r n a Trasa Logo" />
             <Divider />
             <List style={{paddingTop: 0, paddingBottom: 0}}>
@@ -66,8 +64,8 @@ class MainLayout extends Component {
           </div>
         </Drawer>
         
-        <div style={{marginLeft: drawerWidth}}>
-          <div style={{textAlign: "right"}}>
+        <div style={{marginLeft: drawerWidth, height: "100%"}}>
+          <div id="iconsBar" style={{textAlign: "right"}}>
             <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
               <img src="youtube.svg" style={appBarIconStyle} alt="YouTube Icon" />
             </a>
@@ -77,8 +75,9 @@ class MainLayout extends Component {
             <a href="https://github.com/tosi3k/io">
               <img src="github.svg" style={appBarIconStyle} alt="Github Icon" />
             </a>
+          
+            <Divider />
           </div>
-          <Divider />
           
           {this.props.children}
         </div>
