@@ -26,6 +26,7 @@ class AutoComplete extends Component {
       labels: {name: ""},
       focused: false,
       inputValue: "",
+      inputLength: 0,
     };
   }
   
@@ -42,18 +43,24 @@ class AutoComplete extends Component {
   }
   
   changeFocus = () => {
-    this.setState(prevState => ({
-      focused: !prevState.focused,
-    }));
+    setTimeout(() => {
+      this.setState(prevState => ({
+        focused: !prevState.focused,
+      }));
+    }, 100);
   }
   
   handleListItemClicked = event => {
-    console.log(event);
+    this.setState({
+      inputValue: event.target.childNodes[0].data,
+      inputLength: event.target.childNodes[0].data.length,
+    });
   }
   
   handleInputChanged = event => {
     this.setState({
       inputValue: event.target.value,
+      inputLength: event.target.value.length,
     });
     
     this.state.onChange(event);
@@ -70,7 +77,7 @@ class AutoComplete extends Component {
           onBlur={this.changeFocus}
           value={this.state.inputValue}
         />
-        { this.state.focused && this.state.inputValue.length > 2 && 
+        { this.state.focused && this.state.inputLength >= 2 && 
           <Paper style={paperStyle}>
             <List>
               {this.state.labels.filter(el => {
