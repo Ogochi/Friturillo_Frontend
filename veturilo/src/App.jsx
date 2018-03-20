@@ -70,10 +70,9 @@ class App extends Component {
     return (
       <div style={{backgroundImage: "url('map.jpg')", height: this.state.height}}>
         <Paper style={paperStyle} display="list-item">
-          <List>
+          <List style={{marginTop: 20}}>
             <ListItem>
               <AutoComplete
-                style={{marginTop: 20, marginLeft: 20}}
                 placeholder="Początek podróży"
                 onChange={this.onInputChange('start')}
                 labels={this.state.stations}
@@ -81,7 +80,6 @@ class App extends Component {
             </ListItem>
             <ListItem>
               <AutoComplete
-                style={{marginLeft: 20}}
                 placeholder="Koniec podróży"
                 onChange={this.onInputChange('destination')}
                 labels={this.state.stations}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import Input from 'material-ui/Input';
 import List, { ListItem, ListItemText } from 'material-ui/List';
+import Chip from 'material-ui/Chip';
 import PropTypes from 'prop-types';
 
 const paperStyle = {
@@ -21,7 +22,6 @@ class AutoComplete extends Component {
     
     this.state = {
       onChange: props.onChange,
-      style: props.style,
       placeholder: props.placeholder,
       labels: {name: ""},
       focused: false,
@@ -50,33 +50,39 @@ class AutoComplete extends Component {
     }, 100);
   }
   
-  handleListItemClicked = event => {
-    this.setState({
-      inputValue: event.target.childNodes[0].data,
-      inputLength: event.target.childNodes[0].data.length,
-    });
-  }
+  handleListItemClicked = event => 
+    this.changeInput(event.target.childNodes[0].data)
   
   handleInputChanged = event => {
-    this.setState({
-      inputValue: event.target.value,
-      inputLength: event.target.value.length,
-    });
+    this.changeInput(event.target.value);
     
     this.state.onChange(event);
+  }
+  
+  changeInput = value => {
+    this.setState({
+      inputValue: value,
+      inputLength: value.length,
+    });
   }
   
   render() {
     return (
       <div>
-        <Input 
-          placeholder={this.state.placeholder}
-          style={this.state.style}
-          onChange={this.handleInputChanged}
-          onFocus={this.changeFocus}
-          onBlur={this.changeFocus}
-          value={this.state.inputValue}
+        <Chip
+          onDelete={() => this.changeInput("")}
+          style={{height: "3em"}}
+          label={
+            <Input 
+              placeholder={this.state.placeholder}
+              onChange={this.handleInputChanged}
+              onFocus={this.changeFocus}
+              onBlur={this.changeFocus}
+              value={this.state.inputValue}
+            />
+          }
         />
+        
         { this.state.focused && this.state.inputLength >= 2 && 
           <Paper style={paperStyle}>
             <List>
@@ -94,7 +100,6 @@ class AutoComplete extends Component {
 
 AutoComplete.propTypes = {
   onChange: PropTypes.func.isRequired,
-  style: PropTypes.object.isRequired,
   placeholder: PropTypes.string.isRequired,
   labels: PropTypes.arrayOf(PropTypes.shape({
      name: PropTypes.string.isRequired,
