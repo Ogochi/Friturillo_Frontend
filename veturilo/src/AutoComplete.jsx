@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import Input from 'material-ui/Input';
 import List, { ListItem } from 'material-ui/List';
+import PropTypes from 'prop-types';
 
 const paperStyle = {
   overflowY: "scroll",
@@ -18,7 +19,7 @@ class AutoComplete extends Component {
     this.state = {
       onChange: props.onChange,
       style: props.style,
-      placeholder: props.inputPlaceholder,
+      placeholder: props.placeholder,
     };
   }
   
@@ -53,5 +54,11 @@ class AutoComplete extends Component {
     );
   }
 }
+
+AutoComplete.propTypes = {
+  onChange: PropTypes.function,
+  style: PropTypes.element,
+  placeholder: PropTypes.String,
+};
 
 export default AutoComplete;
