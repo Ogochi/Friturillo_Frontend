@@ -12,6 +12,7 @@ const paperStyle = {
   position: "fixed",
   height: "45%",
   width: "18em",
+  minHeight: "11em"
 };
 
 class App extends Component {
