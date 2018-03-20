@@ -87,7 +87,7 @@ class AutoComplete extends Component {
           <Paper style={paperStyle}>
             <List>
               {this.state.labels.filter(el => {
-                return( el.key.includes(this.state.inputValue) );
+                return( el.key.toLowerCase().includes(this.state.inputValue.toLowerCase()) );
               }
             )}
             </List>
