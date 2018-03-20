@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
-import Input from 'material-ui/Input';
 import Button from 'material-ui/Button';
 import List, { ListItem } from 'material-ui/List';
 import converter from 'xml-js';
 import axios from 'axios';
+import AutoComplete from './AutoComplete.jsx'
 
 const paperStyle = {
   marginTop: "10%", 
@@ -23,6 +23,7 @@ class App extends Component {
       iconBarHeight: "100%",
       start: "",
       destination: "",
+      stations: [],
     };
   }
   
@@ -45,11 +46,10 @@ class App extends Component {
           let stationsNames = stations.map(s => ({
             name: s._attributes.name
           }));
-          let names = "";
-          stationsNames.forEach(s => {
-            names += s.name + "\n";
+
+          this.setState({
+            stations: stationsNames,
           });
-          alert(names);
         } else {
           alert("Error - failed to download stations data!");
         }
@@ -72,17 +72,19 @@ class App extends Component {
         <Paper style={paperStyle} display="list-item">
           <List>
             <ListItem>
-              <Input
+              <AutoComplete
                 style={{marginTop: 20, marginLeft: 20}}
                 placeholder="Początek podróży"
                 onChange={this.onInputChange('start')}
+                labels={this.state.stations}
               />
             </ListItem>
             <ListItem>
-              <Input
+              <AutoComplete
                 style={{marginLeft: 20}}
                 placeholder="Koniec podróży"
                 onChange={this.onInputChange('destination')}
+                labels={this.state.stations}
               />
             </ListItem>
             { this.state.start !== "" && this.state.destination !== "" &&
