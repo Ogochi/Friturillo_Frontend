@@ -26,15 +26,11 @@ const appBarIconStyle = {
   marginBottom: iconMargin,
   verticalAlign: "middle",
 };
+const buttonStyle = {
+  width: drawerWidth,
+}
 
 class MainLayout extends Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      
-    };
-  }
   render() {
     const glowna = props => <Link to="/" {...props} />;
     const trasa = props => <Link to="/trasa" {...props} />;
@@ -45,16 +41,18 @@ class MainLayout extends Component {
       <div style={{margin: "0 0 0 0", height: "100%", width: "100%", position: "absolute"}}>  
         <Drawer variant="permanent" anchor="left">
           <div style={{width: drawerWidth, height: "100%", display: "block"}}>
-            <img style={logoStyle} src="logo.png" alt="E l i t a r n a Trasa Logo" />
+            <Link to="/">
+              <img style={logoStyle} src="logo.png" alt="E l i t a r n a Trasa Logo" />
+            </Link>
             <Divider />
             <List style={{paddingTop: 0, paddingBottom: 0}}>
-              <Button style={{width: drawerWidth}} component={glowna}>Strona Główna</Button>
+              <Button style={buttonStyle} component={glowna}>Strona Główna</Button>
               <Divider />
-              <Button style={{width: drawerWidth}} component={trasa}>Wyszukaj Trase</Button>
+              <Button style={buttonStyle} component={trasa}>Wyszukaj Trase</Button>
               <Divider />
-              <Button style={{width: drawerWidth}} component={stacje}>Lista Stacji</Button>
+              <Button style={buttonStyle} component={stacje}>Lista Stacji</Button>
               <Divider />
-              <Button style={{width: drawerWidth}} component={kontakt}>Kontakt</Button>
+              <Button style={buttonStyle} component={kontakt}>Kontakt</Button>
               <Divider />
             </List>
           </div>
