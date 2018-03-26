@@ -30,6 +30,7 @@ class App extends Component {
       destination: "",
       stations: [],
       networkErrorModalOpen: false,
+      formState: "form",
     };
   }
   
@@ -83,42 +84,53 @@ class App extends Component {
   }
   
   onSubmitClicked = () => {
-    alert("Submit clicked!");
+    this.setState(prev => ({
+      start: prev.start,
+      formState: "waiting",
+    }));
   }
   
   render() {
     const { classes } = this.props;
     return (
       <div style={{backgroundImage: "url('map.jpg')", height: this.state.height}}>
-        <Paper className={classes.paper} display="list-item">
-          <List style={{marginTop: 20}}>
-            <ListItem>
-              <AutoComplete
-                placeholder="Początek podróży"
-                onChange={this.onInputChange('start')}
-                labels={this.state.stations}
-              />
-            </ListItem>
-            <ListItem>
-              <AutoComplete
-                placeholder="Koniec podróży"
-                onChange={this.onInputChange('destination')}
-                labels={this.state.stations}
-              />
-            </ListItem>
-            { this.state.start !== "" && this.state.destination !== "" &&
-            <ListItem>
-              <Button 
-                style={{marginLeft: "auto", marginRight: "auto"}} 
-                variant="raised" 
-                color="primary"
-                onClick={this.onSubmitClicked}
-              >
-                Szukaj
-              </Button>
-            </ListItem>
-            }
-          </List>
+        <Paper className={classes.paper}>
+          { this.state.formState === "form" &&
+            <List style={{marginTop: 20}}>
+              <ListItem>
+                <AutoComplete
+                  placeholder="Początek podróży"
+                  onChange={this.onInputChange('start')}
+                  labels={this.state.stations}
+                />
+              </ListItem>
+              <ListItem>
+                <AutoComplete
+                  placeholder="Koniec podróży"
+                  onChange={this.onInputChange('destination')}
+                  labels={this.state.stations}
+                />
+              </ListItem>
+              { this.state.start !== "" && this.state.destination !== "" &&
+              <ListItem>
+                <Button 
+                  style={{marginLeft: "auto", marginRight: "auto"}} 
+                  variant="raised" 
+                  color="primary"
+                  onClick={this.onSubmitClicked}
+                >
+                  Szukaj
+                </Button>
+              </ListItem>
+              }
+            </List>
+          }
+          { this.state.formState === "waiting" && ""
+            
+          }
+          { this.state.formState === "result" && ""
+            
+          }
         </Paper>
         <NetworkErrorModal 
           onClose={this.toggleNetworkErrorModal}
