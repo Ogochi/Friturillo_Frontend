@@ -6,6 +6,7 @@ import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import converter from 'xml-js';
 import axios from 'axios';
+import Spinner from 'react-spinkit';
 import AutoComplete from './AutoComplete.jsx';
 import NetworkErrorModal from './NetworkErrorModal.jsx';
 
@@ -17,7 +18,14 @@ const styles = {
     height: "45%",
     width: "18em",
     minHeight: "11em"
-  }
+  },
+  spinner: {
+    margin: "40% auto auto auto",
+    top: 0,
+    left: 0,
+    width: "20%",
+    height: "20%",
+  },
 };
 
 class App extends Component {
@@ -88,6 +96,31 @@ class App extends Component {
       start: prev.start,
       formState: "waiting",
     }));
+    
+    this.getRoute();
+  }
+  
+  getRoute = () => {
+    axios.get(`http://api.nextbike.net/maps/nextbike-official.xml`, {
+      timeout: 800000,
+    })
+      .then(res => {
+        this.setState({
+          formState: "result",
+        });
+      })
+      .catch(() => {
+        this.toggleNetworkErrorModal();
+        this.setState({
+          formState: "form",
+        });
+      })
+  }
+  
+  returnToApp = () => {
+    this.setState({
+      formState: "form",
+    });
   }
   
   render() {
@@ -125,11 +158,11 @@ class App extends Component {
               }
             </List>
           }
-          { this.state.formState === "waiting" && ""
-            
+          { this.state.formState === "waiting" &&
+            <Spinner className={classes.spinner} color="blue" name="folding-cube" />
           }
-          { this.state.formState === "result" && ""
-            
+          { this.state.formState === "result" &&
+            <Button variant="raised" color="primary" onClick={this.returnToApp}>Powrót</Button>
           }
         </Paper>
         <NetworkErrorModal 
