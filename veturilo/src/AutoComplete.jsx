@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import Input from 'material-ui/Input';
 import List, { ListItem, ListItemText } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
 import Chip from 'material-ui/Chip';
 import PropTypes from 'prop-types';
 
@@ -32,9 +33,12 @@ class AutoComplete extends Component {
   
   componentWillReceiveProps(props) {
     const listItems = props.labels.map(label => (
-      <ListItem key={label.name} button onClick={this.handleListItemClicked}>
-        <ListItemText primary={label.name} />
-      </ListItem>
+      <div key={label.name}>
+        <ListItem key={label.name} button onClick={this.handleListItemClicked}>
+          <ListItemText primary={label.name} />
+        </ListItem>
+        <Divider />
+      </div>
     ))
 
     this.setState({
