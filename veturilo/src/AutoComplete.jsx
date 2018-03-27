@@ -61,8 +61,6 @@ class AutoComplete extends Component {
   
   handleInputChanged = event => {
     this.changeInput(event.target.value);
-    
-    this.state.onChange(event);
   }
   
   changeInput = value => {
@@ -70,6 +68,7 @@ class AutoComplete extends Component {
       inputValue: value,
       inputLength: value.length,
     });
+    this.state.onChange(value);
   }
   
   searchLocation = () => {
