@@ -92,12 +92,14 @@ class App extends Component {
     });
   }
   
+  changeFormState = newState => () => {
+    this.setState({
+      formState: newState,
+    });
+  }
+  
   onSubmitClicked = () => {
-    this.setState(prev => ({
-      start: prev.start,
-      formState: "waiting",
-    }));
-    
+    this.changeFormState("waiting")();  
     this.getRoute();
   }
   
@@ -106,22 +108,12 @@ class App extends Component {
       timeout: 800000,
     })
       .then(res => {
-        this.setState({
-          formState: "result",
-        });
+        this.changeFormState("result")();  
       })
       .catch(() => {
         this.toggleNetworkErrorModal();
-        this.setState({
-          formState: "form",
-        });
+        this.changeFormState("form")();  
       })
-  }
-  
-  returnToApp = () => {
-    this.setState({
-      formState: "form",
-    });
   }
   
   render() {
@@ -163,7 +155,13 @@ class App extends Component {
             <Spinner className={classes.spinner} color="blue" name="folding-cube" />
           }
           { this.state.formState === "result" &&
-            <Button variant="raised" color="primary" onClick={this.returnToApp}>Powrót</Button>
+            <Button 
+              variant="raised" 
+              color="primary" 
+              onClick={this.changeFormState("form")}
+            >
+              Powrót
+            </Button>
           }
         </Paper>
         <NetworkErrorModal 
