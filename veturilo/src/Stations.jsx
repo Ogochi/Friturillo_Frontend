@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Utils from './Utils.js';
 import NetworkErrorModal  from './NetworkErrorModal.jsx';
+import Spinner from 'react-spinkit';
 
 class Stations extends Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class Stations extends Component {
     this.state = {
       networkErrorModalOpen: false,
       stations: [],
+      spinner: false,
     };
   }
   
@@ -18,9 +20,13 @@ class Stations extends Component {
   }
   
   getStations = isItFirstTime => () => {
+    this.toggleSpinner();
     if (!isItFirstTime)
       this.toggleNetworkErrorModal();
-    Utils.getStations(this.onStationsReceived, this.toggleNetworkErrorModal);
+    Utils.getStations(this.onStationsReceived, () => { 
+      this.toggleSpinner(); 
+      this.toggleNetworkErrorModal(); 
+    });
   }
   
   toggleNetworkErrorModal = () => {
@@ -29,7 +35,14 @@ class Stations extends Component {
     }));
   }
   
+  toggleSpinner = () => {
+    this.setState(prevState => ({
+      spinner: !prevState.spinner,
+    }));
+  }
+  
   onStationsReceived = stations => {
+    this.toggleSpinner();
     const mappedStations = stations.map(s => ({
       name: s._attributes.name,
       bikes: s._attributes.bikes,
@@ -70,6 +83,18 @@ class Stations extends Component {
           })}
           </TableBody>
         </Table>
+        { this.state.spinner &&
+          <Spinner 
+            color="blue" 
+            name="folding-cube" 
+            style={{
+              width: 70, 
+              height: 70,
+              margin: "auto auto auto auto",
+              left: 0, top: 70, bottom: 0, right: 0,
+            }} 
+          />
+        }
         <NetworkErrorModal 
           onClose={this.toggleNetworkErrorModal}
           onRetry={this.getStations(false)}
