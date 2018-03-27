@@ -5,7 +5,7 @@ import consts from './consts.js';
 class Utils {
   static getStations(onSuccess, onError) {
     axios.get(consts.veturiloApi, {
-      timeout: 3000,
+      timeout: 4000,
     })
       .then(res => {
         let stations = JSON.parse(
