@@ -4,11 +4,11 @@ import Button from 'material-ui/Button';
 import List, { ListItem } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
-import converter from 'xml-js';
 import axios from 'axios';
 import Spinner from 'react-spinkit';
 import AutoComplete from './AutoComplete.jsx';
 import NetworkErrorModal from './NetworkErrorModal.jsx';
+import Utils from './Utils.js';
 import consts from './consts.js';
 
 const styles = {
@@ -59,31 +59,23 @@ class App extends Component {
   getStations = isItFirstTime => () => {
     if (!isItFirstTime)
       this.toggleNetworkErrorModal();
-
-    axios.get(consts.veturiloApi, {
-      timeout: 2000,
-    })
-      .then(res => {
-        let stations = JSON.parse(
-          converter.xml2json(res.data, {compact: true, spaces: 4}))
-            .markers.country.city.place;
-        let stationsNames = stations.map(s => ({
-          name: s._attributes.name
-        }));
-
-        this.setState({
-          stations: stationsNames,
-        });
-      })
-      .catch(() => {
-        this.toggleNetworkErrorModal();
-      })
+    Utils.getStations(this.onStationsReceived, this.toggleNetworkErrorModal);
   }
   
   toggleNetworkErrorModal = () => {
     this.setState( prevState => ({
       networkErrorModalOpen: !prevState.networkErrorModalOpen,
     }));
+  }
+  
+  onStationsReceived = stations => {
+    let stationsNames = stations.map(s => ({
+      name: s._attributes.name
+    }));
+
+    this.setState({
+      stations: stationsNames,
+    });
   }
   
   onInputChange = name => event => {
@@ -104,6 +96,7 @@ class App extends Component {
   }
   
   getRoute = () => {
+    // TODO - just random request
     axios.get(consts.longRequestAddress, {
       timeout: 800000,
     })
