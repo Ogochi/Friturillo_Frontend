@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
-import Input from 'material-ui/Input';
+import Input, { InputAdornment } from 'material-ui/Input';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
+import Cancel from 'material-ui-icons/Cancel';
+import LocationOn from 'material-ui-icons/LocationOn';
 import Chip from 'material-ui/Chip';
 import PropTypes from 'prop-types';
 
@@ -70,11 +72,15 @@ class AutoComplete extends Component {
     });
   }
   
+  searchLocation = () => {
+    // TODO
+    this.changeInput("51.11, 33.33");
+  }
+  
   render() {
     return (
       <div>
         <Chip
-          onDelete={() => this.changeInput("")}
           style={{height: "3em"}}
           label={
             <Input 
@@ -83,6 +89,14 @@ class AutoComplete extends Component {
               onFocus={this.changeFocus}
               onBlur={this.changeFocus}
               value={this.state.inputValue}
+              endAdornment={
+                <InputAdornment>
+                  {this.state.inputLength ?
+                    (<Cancel style={{color: "gray"}} onClick={() => this.changeInput("")} />) : 
+                    (<LocationOn style={{color: "gray"}} onClick={this.searchLocation} />)
+                  }
+                </InputAdornment>
+              }
             />
           }
         />
