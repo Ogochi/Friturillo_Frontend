@@ -15,6 +15,8 @@ const styles = theme => ({
     left: 0, right: 0, top: 0, bottom: 0,
     width: "30%",
     height: "30%",
+    minHeight: "13em",
+    minWidth: "13em",
     padding: theme.spacing.unit * 4,
     textAlign: "center",
   },
