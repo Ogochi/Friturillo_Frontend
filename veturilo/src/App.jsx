@@ -9,6 +9,7 @@ import axios from 'axios';
 import Spinner from 'react-spinkit';
 import AutoComplete from './AutoComplete.jsx';
 import NetworkErrorModal from './NetworkErrorModal.jsx';
+import consts from './consts.js';
 
 const styles = {
   paper: {
@@ -59,7 +60,7 @@ class App extends Component {
     if (!isItFirstTime)
       this.toggleNetworkErrorModal();
 
-    axios.get(`http://api.nextbike.net/maps/nextbike-official.xml?city=210`, {
+    axios.get(consts.veturiloApi, {
       timeout: 2000,
     })
       .then(res => {
@@ -101,7 +102,7 @@ class App extends Component {
   }
   
   getRoute = () => {
-    axios.get(`http://api.nextbike.net/maps/nextbike-official.xml`, {
+    axios.get(consts.longRequestAddress, {
       timeout: 800000,
     })
       .then(res => {
