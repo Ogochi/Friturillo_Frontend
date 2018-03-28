@@ -84,7 +84,7 @@ NetworkErrorModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onRetry: PropTypes.func.isRequired,
   onCancell: PropTypes.func.isRequired,
-  open: PropTypes.boolean,
+  open: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(NetworkErrorModal);
