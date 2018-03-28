@@ -8,6 +8,7 @@ import axios from 'axios';
 import Spinner from 'react-spinkit';
 import AutoComplete from './AutoComplete.jsx';
 import NetworkErrorModal from './NetworkErrorModal.jsx';
+import FoundRoute from './FoundRoute.jsx';
 import Utils from './Utils.js';
 import consts from './consts.js';
 
@@ -148,13 +149,7 @@ class App extends Component {
             <Spinner className={classes.spinner} color="blue" name="folding-cube" />
           }
           { this.state.formState === "result" &&
-            <Button 
-              variant="raised" 
-              color="primary" 
-              onClick={this.changeFormState("form")}
-            >
-              Powrót
-            </Button>
+            <FoundRoute returnToForm={this.changeFormState("form")} />
           }
         </Paper>
         <NetworkErrorModal 
