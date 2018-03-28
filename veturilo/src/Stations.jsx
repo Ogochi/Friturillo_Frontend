@@ -3,6 +3,10 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 import Utils from './Utils.js';
 import NetworkErrorModal  from './NetworkErrorModal.jsx';
 import Spinner from 'react-spinkit';
+import LazyLoad from 'react-lazyload';
+import Search from 'material-ui-icons/Search';
+import { InputAdornment } from 'material-ui/Input';
+import TextField from 'material-ui/TextField';
 
 class Stations extends Component {
   constructor(props) {
@@ -12,6 +16,7 @@ class Stations extends Component {
       networkErrorModalOpen: false,
       stations: [],
       spinner: false,
+      input: "",
     };
   }
   
@@ -56,9 +61,23 @@ class Stations extends Component {
     });
   }
   
+  handleInputChanged = event => {
+    this.setState({
+      input: event.target.value,
+    });
+  }
+  
   render() {
     return (
       <div>
+        <TextField
+          placeholder="Szukaj..."
+          style={{margin: "1em 1em 1em 1em"}}
+          onChange={this.handleInputChanged}
+          InputProps={{
+            startAdornment: <InputAdornment position="start"><Search style={{color: "gray"}} /></InputAdornment>,
+          }}
+        />
         <Table>
           <TableHead>
             <TableRow>
@@ -70,8 +89,12 @@ class Stations extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-          {this.state.stations.map(s => {
+          {this.state.stations.filter(s => {
+              return this.state.input.length === 0 ||
+                s.name.toLowerCase().includes(this.state.input.toLowerCase());
+            }).map(s => {
             return (
+              <LazyLoad once key={s.name + "12"}>
               <TableRow key={s.name + "11"}>
                 <TableCell>{s.name}</TableCell>
                 <TableCell numeric>{s.bikes}</TableCell>
@@ -79,6 +102,7 @@ class Stations extends Component {
                 <TableCell numeric>{s.freeRacks}</TableCell>
                 <TableCell>{s.cords}</TableCell>
               </TableRow>
+              </LazyLoad>
             );
           })}
           </TableBody>
