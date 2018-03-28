@@ -54,7 +54,9 @@ class Stations extends Component {
       racks: s._attributes.bike_racks,
       freeRacks: s._attributes.free_racks,
       cords: s._attributes.lat + ", " + s._attributes.lng,
-    }));
+    })).sort((a, b) => {
+      return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+    });
 
     this.setState({
       stations: mappedStations,
@@ -97,7 +99,7 @@ class Stations extends Component {
                 s.name.toLowerCase().includes(this.state.input.toLowerCase());
             }).map(s => {
             return (
-              <LazyLoad once key={s.name + "12"}>
+              <LazyLoad once key={s.name + "12"} offset={300} height={"3em"}>
               <TableRow key={s.name + "11"}>
                 <TableCell>{s.name}</TableCell>
                 <TableCell numeric>{s.bikes}</TableCell>
