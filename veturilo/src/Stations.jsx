@@ -75,7 +75,10 @@ class Stations extends Component {
           style={{margin: "1em 1em 1em 1em"}}
           onChange={this.handleInputChanged}
           InputProps={{
-            startAdornment: <InputAdornment position="start"><Search style={{color: "gray"}} /></InputAdornment>,
+            startAdornment: 
+            <InputAdornment position="start">
+              <Search style={{color: "gray"}} />
+            </InputAdornment>,
           }}
         />
         <Table>
