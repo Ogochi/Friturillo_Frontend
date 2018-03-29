@@ -3,7 +3,7 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 import Utils from './Utils.js';
 import NetworkErrorModal  from './NetworkErrorModal.jsx';
 import Spinner from 'react-spinkit';
-import LazyLoad from 'react-lazyload';
+import LazyLoad, { forceCheck } from 'react-lazyload';
 import Search from 'material-ui-icons/Search';
 import { InputAdornment } from 'material-ui/Input';
 import TextField from 'material-ui/TextField';
@@ -22,6 +22,10 @@ class Stations extends Component {
   
   componentDidMount() {
     this.getStations(true)();
+  }
+  
+  componentDidUpdate() {
+    forceCheck();
   }
   
   getStations = isItFirstTime => () => {
@@ -99,8 +103,8 @@ class Stations extends Component {
                 s.name.toLowerCase().includes(this.state.input.toLowerCase());
             }).map(s => {
             return (
-              <LazyLoad once key={s.name + "12"} offset={300} height={"3em"}>
-              <TableRow key={s.name + "11"}>
+              <LazyLoad once key={s.name + "1"} offset={300} height={"3em"}>
+              <TableRow hover>
                 <TableCell>{s.name}</TableCell>
                 <TableCell numeric>{s.bikes}</TableCell>
                 <TableCell numeric>{s.racks}</TableCell>
