@@ -7,6 +7,9 @@ import Cancel from 'material-ui-icons/Cancel';
 import LocationOn from 'material-ui-icons/LocationOn';
 import Chip from 'material-ui/Chip';
 import PropTypes from 'prop-types';
+import NetworkErrorModal from './NetworkErrorModal.jsx';
+import Utils from './Utils.js';
+import consts from './consts.js';
 
 const paperStyle = {
   overflowY: "scroll",
@@ -45,6 +48,7 @@ class AutoComplete extends Component {
 
     this.setState({
       labels: listItems,
+      modalOpen: false,
     });
   }
   
@@ -72,8 +76,17 @@ class AutoComplete extends Component {
   }
   
   searchLocation = () => {
-    // TODO
-    this.changeInput("51.11, 33.33");
+    Utils.getLocation(pos => {
+      this.changeInput(pos.coords.latitude + ", " + pos.coords.longitude);
+    }, () => {
+      this.toggleNetworkErrorModal();
+    });
+  }
+  
+  toggleNetworkErrorModal = () => {
+    this.setState(prevState => ({
+      modalOpen: !prevState.modalOpen,
+    }));
   }
   
   render() {
@@ -110,6 +123,14 @@ class AutoComplete extends Component {
             </List>
           </Paper>
         }
+        <NetworkErrorModal 
+          onClose={this.toggleNetworkErrorModal}
+          onRetry={this.searchLocation}
+          onCancell={this.toggleNetworkErrorModal}
+          open={this.state.modalOpen}
+          title={consts.gpsErrorModalTitle}
+          content={consts.gpsErrorModalContent}
+        />
       </div>
     );
   }

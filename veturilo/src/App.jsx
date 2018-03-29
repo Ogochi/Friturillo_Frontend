@@ -157,6 +157,8 @@ class App extends Component {
           onRetry={this.getStations(false)}
           onCancell={this.toggleNetworkErrorModal}
           open={this.state.networkErrorModalOpen}
+          title={consts.networkErrorModalTitle}
+          content={consts.networkErrorModalContent}
         />
       </div>
     );

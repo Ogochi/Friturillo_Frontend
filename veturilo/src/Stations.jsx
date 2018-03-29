@@ -7,6 +7,7 @@ import LazyLoad, { forceCheck } from 'react-lazyload';
 import Search from 'material-ui-icons/Search';
 import { InputAdornment } from 'material-ui/Input';
 import TextField from 'material-ui/TextField';
+import consts from './consts.js';
 
 class Stations extends Component {
   constructor(props) {
@@ -133,6 +134,8 @@ class Stations extends Component {
           onRetry={this.getStations(false)}
           onCancell={this.toggleNetworkErrorModal}
           open={this.state.networkErrorModalOpen}
+          title={consts.networkErrorModalTitle}
+          content={consts.networkErrorModalContent}
         />
       </div>
     );
