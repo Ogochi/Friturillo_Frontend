@@ -48,12 +48,11 @@ class NetworkErrorModal extends Component {
       >
         <div className={classes.modal}>
           <Typography variant="title" id="modal-title">
-            Network Connection Error
+            {this.props.title}
           </Typography>
           <Divider style={{marginTop: "1em", marginBottom: "1em"}} />
           <Typography variant="subheading" id="modal-description">
-            Unfortunatelly occured network connection error.
-            You can either retry to make a connection or cancell.
+            {this.props.content}
           </Typography>
           <div style={{marginTop: "1em"}}>
             <Button
@@ -85,6 +84,8 @@ NetworkErrorModal.propTypes = {
   onRetry: PropTypes.func.isRequired,
   onCancell: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(NetworkErrorModal);
