@@ -18,6 +18,13 @@ class Utils {
         onError();
       })
   }
+  static getLocation(onSuccess, onError) {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(onSuccess);
+    } else {
+      onError();
+    }
+  }
 }
 
 export default Utils;
