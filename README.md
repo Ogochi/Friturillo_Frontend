@@ -1,5 +1,6 @@
 # Veturilo Frontend
 
+Build: npm install
 Starting website: npm start
 
 ## TODO:
