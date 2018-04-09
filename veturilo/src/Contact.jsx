@@ -11,7 +11,8 @@ import Grid from "material-ui/Grid";
 
 const styles = theme => ({
   	button: {
-    	margin: theme.spacing.unit * 5,
+    	margin: theme.spacing.unit,
+    	marginTop: theme.spacing.unit * 4,
     	display: 'flex',
     	maxHeight: 10,
 	    minWidth: 270,
@@ -32,12 +33,12 @@ const styles = theme => ({
 
   	},
   	formControl: {
-	    margin: theme.spacing.unit * 5,
+	    margin: theme.spacing.unit,
 	    minWidth: 270,
 	    maxWidth: 400,
   	},
   	selectEmpty: {
-    	marginTop: theme.spacing.unit * 2,
+    	marginTop: theme.spacing.unit,
   	},
 });
 
@@ -56,7 +57,7 @@ class SimpleSelect extends React.Component {
 
     return (
       	<form className={classes.root} autoComplete="off" >
-      		<Grid container direction="column" alignItems="center" justify="center">
+      		<Grid container direction="column" alignItems="center" justify="center" spacing={0}>
 		        <Grid item>
 			        <FormControl className={classes.formControl} direction="column">
 
@@ -80,47 +81,58 @@ class SimpleSelect extends React.Component {
 			        </FormControl>
 			    </Grid>
 
-		        <FormControl className={classes.formControl}>
-		          	<TextField
-			            required
-			          	id="firstName"
-			          	label="Imię"
-			          	type="text"
-		        	/>
-		        </FormControl>
+			    <Grid item>
+			        <FormControl className={classes.formControl}>
+			          	<TextField
+				            required
+				          	id="firstName"
+				          	label="Imię"
+				          	type="text"
+			        	/>
+			        </FormControl>
+		        </Grid>
 
-		        <FormControl className={classes.formControl}>
-		        	<TextField
-			          	id="secondName"
-			          	label="Nazwisko"
-			          	type="text"
-		        	/>
-		        </FormControl>
+		        <Grid item> 
+			        <FormControl className={classes.formControl}>
+			        	<TextField
+				          	id="secondName"
+				          	label="Nazwisko"
+				          	type="text"
+			        	/>
+			        </FormControl>
+			    </Grid>
 
-		        <FormControl className={classes.formControl}>	
-		        	<TextField
-		        		required
-		              	id="email"
-		              	label="Email"
-		              	type="email"
-		            />
-		        </FormControl>
+			    <Grid item>
+			        <FormControl className={classes.formControl}>	
+			        	<TextField
+			        		required
+			              	id="email"
+			              	label="Email"
+			              	type="email"
+			            />
+			        </FormControl>
+			    </Grid>
 
-		        <FormControl className={classes.formControl}>
-		            <TextField
-		              	required
-		              	id="message"
-		              	label="Wiadomość"
-		              	type="text"
-		              	multiline
-		              	rows="6"
-		            />
-		        </FormControl>
+			    <Grid item>
+			        <FormControl className={classes.formControl}>
+			            <TextField
+			              	required
+			              	id="message"
+			              	label="Wiadomość"
+			              	type="text"
+			              	multiline
+			              	rows="4"
+			            />
+			        </FormControl>
+				</Grid>
 
-				<Button variant="raised" color="primary" className={classes.button}>
-		       		Wyślij
-		      	</Button>
-		      </Grid>
+				<Grid item>
+					<Button variant="raised" color="primary" className={classes.button}>
+			       		Wyślij
+			      	</Button>
+		      	</Grid>
+		      
+		    </Grid>
 
       	</form>
 
