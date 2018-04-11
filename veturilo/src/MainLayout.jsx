@@ -5,7 +5,6 @@ import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import Drawer from 'material-ui/Drawer';
 import List from 'material-ui/List';
-import Copyright from 'material-ui-icons/Copyright'
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import MenuIcon from 'material-ui-icons/Menu';
 import AppBar from 'material-ui/AppBar';
@@ -84,6 +83,7 @@ class MainLayout extends Component {
     const appMargin = this.state.drawerOpen ? drawerWidth : 0;
     const displayAppBarIcons = this.state.drawerOpen && this.state.mobile ?
       {display: "none"} : {};
+    const year = new Date().getFullYear();
     
     return (
       <div style={{margin: "0 0 0 0", height: "100%", width: "100%", position: "absolute"}}>  
@@ -109,8 +109,7 @@ class MainLayout extends Component {
             </List>
           </div>
           <div style={{display: "inline-block", verticalAlign: "bottom", textAlign: "center"}}>
-            <Copyright style={{width: "15px", verticalAlign: "bottom", color: "gray"}} />
-            <span style={{addingBottom: "20px", color: "gray"}}>2018 Friturillo</span>
+            <span style={{addingBottom: "20px", color: "gray"}}>Copyright ©{year} Friturillo</span>
           </div>
         </Drawer>
         
