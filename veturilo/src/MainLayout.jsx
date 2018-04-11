@@ -6,6 +6,14 @@ import { Link } from 'react-router-dom';
 import Drawer from 'material-ui/Drawer';
 import List from 'material-ui/List';
 import Copyright from 'material-ui-icons/Copyright'
+import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
+import MenuIcon from 'material-ui-icons/Menu';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import IconButton from 'material-ui/IconButton';
+import { withStyles } from 'material-ui/styles';
+import consts from './consts.js';
 
 const drawerWidth = 200;
 const logoMargin = 20;
@@ -28,18 +36,56 @@ const appBarIconStyle = {
 };
 const buttonStyle = {
   width: drawerWidth,
-}
+};
+const styles = theme => ({
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+  },
+});
 
 class MainLayout extends Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      drawerOpen: true,
+    }
+  }
+  
+  componentDidMount() {
+    const w = window,
+    e = document.documentElement,
+    g = document.getElementsByTagName('body')[0];
+    const width = w.innerWidth|| e.clientWidth|| g.clientWidth;
+    if (width < consts.mobileWebsiteWidth)
+      this.toggleMenu();
+  }
+  
+  toggleMenu = () => {
+    this.setState(prev => ({
+      drawerOpen: !prev.drawerOpen,
+    }));
+  }
+  
   render() {
+    const { classes } = this.props;
     const glowna = props => <Link to="/" {...props} />;
     const trasa = props => <Link to="/trasa" {...props} />;
     const kontakt = props => <Link to="/kontakt" {...props} />;
     const stacje = props => <Link to="/stacje" {...props} />;
+    const appMargin = this.state.drawerOpen ? drawerWidth : 0;
     
     return (
       <div style={{margin: "0 0 0 0", height: "100%", width: "100%", position: "absolute"}}>  
-        <Drawer variant="permanent" anchor="left">
+        <Drawer variant="persistent" anchor="left" open={this.state.drawerOpen}>
+          <div onClick={this.toggleMenu} className={classes.drawerHeader}>
+            <ChevronLeftIcon />
+          </div>
+          <Divider />
           <div style={{width: drawerWidth, height: "100%", display: "block"}}>
             <Link to="/">
               <img style={logoStyle} src="logo.png" alt="E l i t a r n a Trasa Logo" />
@@ -62,21 +108,28 @@ class MainLayout extends Component {
           </div>
         </Drawer>
         
-        <div style={{marginLeft: drawerWidth, height: "100%"}}>
-          <div id="iconsBar" style={{textAlign: "right"}}>
-            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-              <img src="youtube.svg" style={appBarIconStyle} alt="YouTube Icon" />
-            </a>
-            <a href="https://github.com/michal-olt/Veturilo---Frontend">
-              <img src="github.svg" style={appBarIconStyle} alt="Github Icon" />
-            </a>
-            <a href="https://github.com/tosi3k/io">
-              <img src="github.svg" style={appBarIconStyle} alt="Github Icon" />
-            </a>
-          
-            <Divider />
-          </div>
-          
+        <AppBar position="sticky" color="default" id="appBar">
+          <Toolbar style={{marginLeft: appMargin, display: "flex", justifyContent: "space-between"}}>
+            { !this.state.drawerOpen &&
+              <IconButton color="inherit" aria-label="Menu" style={{marginRight: "1em"}}>
+                <MenuIcon onClick={this.toggleMenu} />
+              </IconButton>
+            }
+            <Typography variant="title" color="inherit">
+              Friturillo
+            </Typography>
+            <div>
+              <a href="https://github.com/Ogochi/Veturilo---Frontend">
+                <img src="github.svg" style={appBarIconStyle} alt="Github Icon" />
+              </a>
+              <a href="https://github.com/tosi3k/io">
+                <img src="github.svg" style={appBarIconStyle} alt="Github Icon" />
+              </a>
+            </div>
+          </Toolbar>
+        </AppBar>
+        
+        <div style={{marginLeft: appMargin}}>
           {this.props.children}
         </div>
       </div>
@@ -86,6 +139,7 @@ class MainLayout extends Component {
 
 MainLayout.propTypes = {
   children: PropTypes.arrayOf(PropTypes.element),
+  classes: PropTypes.object.isRequired,
 };
 
-export default MainLayout;
+export default withStyles(styles)(MainLayout);

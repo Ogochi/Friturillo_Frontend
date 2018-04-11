@@ -15,7 +15,8 @@ import consts from './consts.js';
 const styles = {
   paper: {
     marginTop: "10%", 
-    marginLeft: "10%", 
+    marginLeft: "10%",
+    marginRight: "auto",
     position: "fixed",
     height: "45%",
     width: "18em",
@@ -45,7 +46,7 @@ class App extends Component {
   }
   
   componentDidMount() {
-    const barHeight = document.getElementById('iconsBar').clientHeight;
+    const barHeight = document.getElementById('appBar').clientHeight;
     const w = window,
     e = document.documentElement,
     g = document.getElementsByTagName('body')[0],

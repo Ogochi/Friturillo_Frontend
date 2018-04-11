@@ -13,6 +13,7 @@ const consts = {
     długie wycieczki. Serwis umożliwia wyznaczenie trasy na podstawie 
     podanych przez użytkownika, wyznaczonych na podstawie lokalizacji 
     urządzenia lub wskazanych na mapie miejsc startowych i docelowych.`,
+  mobileWebsiteWidth: 600,
 };
 
 export default consts;
