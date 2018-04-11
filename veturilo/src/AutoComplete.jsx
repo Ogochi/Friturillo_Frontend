@@ -40,7 +40,7 @@ class AutoComplete extends Component {
   componentWillReceiveProps(props) {
     const listItems = props.labels.map(label => (
       <div key={label.name}>
-        <ListItem key={label.name} button onClick={this.handleListItemClicked}>
+        <ListItem key={label.name} button onMouseDown={this.handleListItemClicked}>
           <ListItemText primary={label.name} />
         </ListItem>
         <Divider />
@@ -54,11 +54,9 @@ class AutoComplete extends Component {
   }
   
   changeFocus = () => {
-    setTimeout(() => {
-      this.setState(prevState => ({
-        focused: !prevState.focused,
-      }));
-    }, 100);
+    this.setState(prevState => ({
+      focused: !prevState.focused,
+    }));
   }
   
   handleListItemClicked = event => 
@@ -124,6 +122,7 @@ class AutoComplete extends Component {
             </List>
           </Paper>
         }
+          
         <NetworkErrorModal 
           onClose={this.toggleNetworkErrorModal}
           onRetry={this.searchLocation}
