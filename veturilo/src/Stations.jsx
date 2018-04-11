@@ -105,13 +105,13 @@ class Stations extends Component {
             }).map(s => {
             return (
               <LazyLoad once key={s.name + "1"} offset={300} height={"3em"}>
-              <TableRow hover>
-                <TableCell>{s.name}</TableCell>
-                <TableCell numeric>{s.bikes}</TableCell>
-                <TableCell numeric>{s.racks}</TableCell>
-                <TableCell numeric>{s.freeRacks}</TableCell>
-                <TableCell>{s.cords}</TableCell>
-              </TableRow>
+                <TableRow hover>
+                  <TableCell>{s.name}</TableCell>
+                  <TableCell numeric>{s.bikes}</TableCell>
+                  <TableCell numeric>{s.racks}</TableCell>
+                  <TableCell numeric>{s.freeRacks}</TableCell>
+                  <TableCell>{s.cords}</TableCell>
+                </TableRow>
               </LazyLoad>
             );
           })}

@@ -33,6 +33,7 @@ class AutoComplete extends Component {
       focused: false,
       inputValue: "",
       inputLength: 0,
+      modalOpen: false,
     };
   }
   
