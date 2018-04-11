@@ -53,6 +53,7 @@ class MainLayout extends Component {
     
     this.state = {
       drawerOpen: true,
+      mobile: false,
     }
   }
   
@@ -62,7 +63,10 @@ class MainLayout extends Component {
     g = document.getElementsByTagName('body')[0];
     const width = w.innerWidth|| e.clientWidth|| g.clientWidth;
     if (width < consts.mobileWebsiteWidth)
-      this.toggleMenu();
+      this.setState({
+        drawerOpen: false,
+        mobile: true,
+      });
   }
   
   toggleMenu = () => {
@@ -78,6 +82,8 @@ class MainLayout extends Component {
     const kontakt = props => <Link to="/kontakt" {...props} />;
     const stacje = props => <Link to="/stacje" {...props} />;
     const appMargin = this.state.drawerOpen ? drawerWidth : 0;
+    const displayAppBarIcons = this.state.drawerOpen && this.state.mobile ?
+      {display: "none"} : {};
     
     return (
       <div style={{margin: "0 0 0 0", height: "100%", width: "100%", position: "absolute"}}>  
@@ -118,7 +124,7 @@ class MainLayout extends Component {
             <Typography variant="title" color="inherit">
               Friturillo
             </Typography>
-            <div>
+            <div style={displayAppBarIcons}>
               <a href="https://github.com/Ogochi/Veturilo---Frontend">
                 <img src="github.svg" style={appBarIconStyle} alt="Github Icon" />
               </a>
