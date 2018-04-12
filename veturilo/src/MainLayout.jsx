@@ -12,7 +12,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import { withStyles } from 'material-ui/styles';
-import consts from './consts.js';
+import Utils from './Utils.js';
 
 const drawerWidth = 200;
 const logoMargin = 20;
@@ -26,7 +26,7 @@ const logoStyle = {
 };
 const iconMargin = 3;
 const appBarIconStyle = {
-  height: "2.5em", 
+  height: "2.5em",
   marginTop: iconMargin,
   marginLeft: iconMargin + 5,
   marginRight: iconMargin,
@@ -49,45 +49,33 @@ const styles = theme => ({
 class MainLayout extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
-      drawerOpen: true,
+      drawerOpen: !Utils.isMobile(),
       mobile: false,
     }
   }
-  
-  componentDidMount() {
-    const w = window,
-    e = document.documentElement,
-    g = document.getElementsByTagName('body')[0];
-    const width = w.innerWidth|| e.clientWidth|| g.clientWidth;
-    if (width < consts.mobileWebsiteWidth)
-      this.setState({
-        drawerOpen: false,
-        mobile: true,
-      });
-  }
-  
+
   toggleMenu = () => {
     this.setState(prev => ({
       drawerOpen: !prev.drawerOpen,
     }));
   }
-  
+
   render() {
     const { classes } = this.props;
+    const year = new Date().getFullYear();
     const trasa = props => <Link to="/" {...props} />;
     const opis = props => <Link to="/opis" {...props} />;
     const kontakt = props => <Link to="/kontakt" {...props} />;
     const stacje = props => <Link to="/stacje" {...props} />;
-    const appMargin = this.state.drawerOpen ? drawerWidth : 0;
-    const displayAppBarIcons = this.state.drawerOpen && this.state.mobile ?
-      {display: "none"} : {};
-    const year = new Date().getFullYear();
-    
+    const appMargin = this.state.drawerOpen && !Utils.isMobile() ? drawerWidth : 0;
+    const drawerVariant = Utils.isMobile() ? "temporary" : "persistent";
+    const drawerOnClose = Utils.isMobile() ? {onClose: this.toggleMenu} : {};
+
     return (
-      <div style={{margin: "0 0 0 0", height: "100%", width: "100%", position: "absolute"}}>  
-        <Drawer variant="persistent" anchor="left" open={this.state.drawerOpen}>
+      <div style={{margin: "0 0 0 0", height: "100%", width: "100%", position: "absolute"}}>
+        <Drawer variant={drawerVariant} anchor="left" open={this.state.drawerOpen} {...drawerOnClose}>
           <div onClick={this.toggleMenu} className={classes.drawerHeader}>
             <ChevronLeftIcon />
           </div>
@@ -112,7 +100,7 @@ class MainLayout extends Component {
             <span style={{addingBottom: "20px", color: "gray"}}>Copyright ©{year} Friturillo</span>
           </div>
         </Drawer>
-        
+
         <AppBar position="sticky" color="default" id="appBar">
           <Toolbar style={{marginLeft: appMargin, display: "flex", justifyContent: "space-between"}}>
             { !this.state.drawerOpen &&
@@ -123,7 +111,7 @@ class MainLayout extends Component {
             <Typography variant="title" color="inherit">
               Friturillo
             </Typography>
-            <div style={displayAppBarIcons}>
+            <div>
               <a href="https://github.com/Ogochi/Veturilo---Frontend">
                 <img src="github.svg" style={appBarIconStyle} alt="Github Icon" />
               </a>
@@ -133,7 +121,7 @@ class MainLayout extends Component {
             </div>
           </Toolbar>
         </AppBar>
-        
+
         <div style={{marginLeft: appMargin}}>
           {this.props.children}
         </div>
