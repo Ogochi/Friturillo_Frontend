@@ -25,6 +25,14 @@ class Utils {
       onError();
     }
   }
+  static isMobile() {
+    const w = window,
+    e = document.documentElement,
+    g = document.getElementsByTagName('body')[0];
+    const width = w.innerWidth|| e.clientWidth|| g.clientWidth;
+    
+    return width < consts.mobileWebsiteWidth;
+  }
 }
 
 export default Utils;
