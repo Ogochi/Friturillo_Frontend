@@ -72,6 +72,7 @@ class MainLayout extends Component {
     const appMargin = this.state.drawerOpen && !Utils.isMobile() ? drawerWidth : 0;
     const drawerVariant = Utils.isMobile() ? "temporary" : "persistent";
     const drawerOnClose = Utils.isMobile() ? {onClose: this.toggleMenu} : {};
+    const menuOnClick = Utils.isMobile() ? {onClick: this.toggleMenu} : {};
 
     return (
       <div style={{margin: "0 0 0 0", height: "100%", width: "100%", position: "absolute"}}>
@@ -85,7 +86,7 @@ class MainLayout extends Component {
               <img style={logoStyle} src="logo.png" alt="Friturillo Logo" />
             </Link>
             <Divider />
-            <List style={{paddingTop: 0, paddingBottom: 0}}>
+            <List style={{paddingTop: 0, paddingBottom: 0}} {...menuOnClick}>
               <Button style={buttonStyle} component={trasa}>Wyszukaj Trase</Button>
               <Divider />
               <Button style={buttonStyle} component={stacje}>Lista Stacji</Button>
