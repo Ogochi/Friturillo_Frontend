@@ -12,7 +12,7 @@ import consts from './consts.js';
 class Stations extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       networkErrorModalOpen: false,
       stations: [],
@@ -20,37 +20,37 @@ class Stations extends Component {
       input: "",
     };
   }
-  
+
   componentDidMount() {
     this.getStations(true)();
   }
-  
+
   componentDidUpdate() {
     forceCheck();
   }
-  
+
   getStations = isItFirstTime => () => {
     this.toggleSpinner();
     if (!isItFirstTime)
       this.toggleNetworkErrorModal();
-    Utils.getStations(this.onStationsReceived, () => { 
-      this.toggleSpinner(); 
-      this.toggleNetworkErrorModal(); 
+    Utils.getStations(this.onStationsReceived, () => {
+      this.toggleSpinner();
+      this.toggleNetworkErrorModal();
     });
   }
-  
+
   toggleNetworkErrorModal = () => {
     this.setState(prev => ({
       networkErrorModalOpen: !prev.networkErrorModalOpen,
     }));
   }
-  
+
   toggleSpinner = () => {
     this.setState(prevState => ({
       spinner: !prevState.spinner,
     }));
   }
-  
+
   onStationsReceived = stations => {
     this.toggleSpinner();
     const mappedStations = stations.map(s => ({
@@ -67,13 +67,13 @@ class Stations extends Component {
       stations: mappedStations,
     });
   }
-  
+
   handleInputChanged = event => {
     this.setState({
       input: event.target.value,
     });
   }
-  
+
   render() {
     return (
       <div>
@@ -82,7 +82,7 @@ class Stations extends Component {
           style={{margin: "1em 1em 1em 1em"}}
           onChange={this.handleInputChanged}
           InputProps={{
-            startAdornment: 
+            startAdornment:
             <InputAdornment position="start">
               <Search style={{color: "gray"}} />
             </InputAdornment>,
@@ -93,9 +93,9 @@ class Stations extends Component {
             <TableRow>
               <TableCell>Nazwa stacji</TableCell>
               <TableCell numeric>Dostępne rowery</TableCell>
-              <TableCell numeric>Ilość stojaków</TableCell>
-              <TableCell numeric>Wolne stojaki</TableCell>
-              <TableCell>Współrzędne</TableCell>
+              { !Utils.isMobile() && <TableCell numeric>Ilość stojaków</TableCell> }
+              { !Utils.isMobile() && <TableCell numeric>Wolne stojaki</TableCell> }
+              { !Utils.isMobile() && <TableCell>Współrzędne</TableCell> }
             </TableRow>
           </TableHead>
           <TableBody>
@@ -108,9 +108,9 @@ class Stations extends Component {
                 <TableRow hover>
                   <TableCell>{s.name}</TableCell>
                   <TableCell numeric>{s.bikes}</TableCell>
-                  <TableCell numeric>{s.racks}</TableCell>
-                  <TableCell numeric>{s.freeRacks}</TableCell>
-                  <TableCell>{s.cords}</TableCell>
+                  { !Utils.isMobile() && <TableCell numeric>{s.racks}</TableCell> }
+                  { !Utils.isMobile() && <TableCell numeric>{s.freeRacks}</TableCell> }
+                  { !Utils.isMobile() && <TableCell>{s.cords}</TableCell> }
                 </TableRow>
               </LazyLoad>
             );
@@ -118,18 +118,18 @@ class Stations extends Component {
           </TableBody>
         </Table>
         { this.state.spinner &&
-          <Spinner 
-            color="blue" 
-            name="folding-cube" 
+          <Spinner
+            color="blue"
+            name="folding-cube"
             style={{
-              width: 70, 
+              width: 70,
               height: 70,
               margin: "auto auto auto auto",
               left: 0, top: 70, bottom: 0, right: 0,
-            }} 
+            }}
           />
         }
-        <NetworkErrorModal 
+        <NetworkErrorModal
           onClose={this.toggleNetworkErrorModal}
           onRetry={this.getStations(false)}
           onCancell={this.toggleNetworkErrorModal}
