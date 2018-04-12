@@ -14,7 +14,7 @@ import consts from './consts.js';
 
 const styles = {
   paper: {
-    marginTop: "10%", 
+    marginTop: "10%",
     marginLeft: "10%",
     marginRight: "auto",
     position: "fixed",
@@ -34,9 +34,8 @@ const styles = {
 class App extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
-      iconBarHeight: "100%",
       start: "",
       destination: "",
       stations: [],
@@ -44,7 +43,7 @@ class App extends Component {
       formState: "form",
     };
   }
-  
+
   componentDidMount() {
     const barHeight = document.getElementById('appBar').clientHeight;
     const w = window,
@@ -54,22 +53,22 @@ class App extends Component {
     this.setState({
       height:  windowHeight - barHeight,
     });
-    
+
     this.getStations(true)();
   }
-  
+
   getStations = isItFirstTime => () => {
     if (!isItFirstTime)
       this.toggleNetworkErrorModal();
     Utils.getStations(this.onStationsReceived, this.toggleNetworkErrorModal);
   }
-  
+
   toggleNetworkErrorModal = () => {
     this.setState( prevState => ({
       networkErrorModalOpen: !prevState.networkErrorModalOpen,
     }));
   }
-  
+
   onStationsReceived = stations => {
     let stationsNames = stations.map(s => ({
       name: s._attributes.name
@@ -79,38 +78,38 @@ class App extends Component {
       stations: stationsNames,
     });
   }
-  
+
   onInputChange = name => value => {
     this.setState({
       [name]: value,
     });
   }
-  
+
   changeFormState = newState => () => {
     this.setState({
       formState: newState,
     });
   }
-  
+
   onSubmitClicked = () => {
-    this.changeFormState("waiting")();  
+    this.changeFormState("waiting")();
     this.getRoute();
   }
-  
+
   getRoute = () => {
     // TODO - just random request
     axios.get(consts.longRequestAddress, {
       timeout: 800000,
     })
       .then(res => {
-        this.changeFormState("result")();  
+        this.changeFormState("result")();
       })
       .catch(() => {
         this.toggleNetworkErrorModal();
-        this.changeFormState("form")();  
+        this.changeFormState("form")();
       })
   }
-  
+
   render() {
     const { classes } = this.props;
     return (
@@ -134,9 +133,9 @@ class App extends Component {
               </ListItem>
               { this.state.start !== "" && this.state.destination !== "" &&
               <ListItem>
-                <Button 
-                  style={{marginLeft: "auto", marginRight: "auto"}} 
-                  variant="raised" 
+                <Button
+                  style={{marginLeft: "auto", marginRight: "auto"}}
+                  variant="raised"
                   color="primary"
                   onClick={this.onSubmitClicked}
                 >
@@ -153,7 +152,7 @@ class App extends Component {
             <FoundRoute returnToForm={this.changeFormState("form")} />
           }
         </Paper>
-        <NetworkErrorModal 
+        <NetworkErrorModal
           onClose={this.toggleNetworkErrorModal}
           onRetry={this.getStations(false)}
           onCancell={this.toggleNetworkErrorModal}
