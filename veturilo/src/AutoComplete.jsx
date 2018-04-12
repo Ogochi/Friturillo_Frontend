@@ -25,18 +25,18 @@ const paperStyle = {
 class AutoComplete extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       onChange: props.onChange,
       placeholder: props.placeholder,
-      labels: {name: ""},
+      labels: [],
       focused: false,
       inputValue: "",
       inputLength: 0,
       modalOpen: false,
     };
   }
-  
+
   componentWillReceiveProps(props) {
     const listItems = props.labels.map(label => (
       <div key={label.name}>
@@ -52,20 +52,20 @@ class AutoComplete extends Component {
       modalOpen: false,
     });
   }
-  
+
   changeFocus = () => {
     this.setState(prevState => ({
       focused: !prevState.focused,
     }));
   }
-  
-  handleListItemClicked = event => 
+
+  handleListItemClicked = event =>
     this.changeInput(event.target.childNodes[0].data)
-  
+
   handleInputChanged = event => {
     this.changeInput(event.target.value);
   }
-  
+
   changeInput = value => {
     this.setState({
       inputValue: value,
@@ -73,7 +73,7 @@ class AutoComplete extends Component {
     });
     this.state.onChange(value);
   }
-  
+
   searchLocation = () => {
     Utils.getLocation(pos => {
       this.changeInput(pos.coords.latitude + ", " + pos.coords.longitude);
@@ -81,20 +81,24 @@ class AutoComplete extends Component {
       this.toggleNetworkErrorModal();
     });
   }
-  
+
   toggleNetworkErrorModal = () => {
     this.setState(prevState => ({
       modalOpen: !prevState.modalOpen,
     }));
   }
-  
+
   render() {
+    const filteredLabels = this.state.labels.filter(el => {
+      return( el.key.toLowerCase().includes(this.state.inputValue.toLowerCase()) );
+    }
+  )
     return (
       <div>
         <Chip
           style={{height: "3em"}}
           label={
-            <Input 
+            <Input
               placeholder={this.state.placeholder}
               onChange={this.handleInputChanged}
               onFocus={this.changeFocus}
@@ -103,7 +107,7 @@ class AutoComplete extends Component {
               endAdornment={
                 <InputAdornment>
                   {this.state.inputLength ?
-                    (<Cancel style={{color: "gray"}} onClick={() => this.changeInput("")} />) : 
+                    (<Cancel style={{color: "gray"}} onClick={() => this.changeInput("")} />) :
                     (<LocationOn style={{color: "gray"}} onClick={this.searchLocation} />)
                   }
                 </InputAdornment>
@@ -111,19 +115,16 @@ class AutoComplete extends Component {
             />
           }
         />
-        
-        { this.state.focused && this.state.inputLength >= 2 && 
+
+        { this.state.focused && this.state.inputLength >= 2 && filteredLabels.length > 0 &&
           <Paper style={paperStyle}>
             <List>
-              {this.state.labels.filter(el => {
-                return( el.key.toLowerCase().includes(this.state.inputValue.toLowerCase()) );
-              }
-            )}
+              {filteredLabels}
             </List>
           </Paper>
         }
-          
-        <NetworkErrorModal 
+
+        <NetworkErrorModal
           onClose={this.toggleNetworkErrorModal}
           onRetry={this.searchLocation}
           onCancell={this.toggleNetworkErrorModal}
