@@ -4,7 +4,6 @@ import Button from 'material-ui/Button';
 import List, { ListItem } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import Spinner from 'react-spinkit';
 import AutoComplete from './AutoComplete.jsx';
 import NetworkErrorModal from './NetworkErrorModal.jsx';
@@ -41,6 +40,7 @@ class App extends Component {
       stations: [],
       networkErrorModalOpen: false,
       formState: "form",
+      route: {},
     };
   }
 
@@ -97,17 +97,17 @@ class App extends Component {
   }
 
   getRoute = () => {
-    // TODO - just random request
-    axios.get(consts.longRequestAddress, {
-      timeout: 800000,
+    Utils.getRoute(this.state.start, this.state.destination, this.onRouteFound, () => {
+      this.toggleNetworkErrorModal();
+      this.changeFormState("form")();
     })
-      .then(res => {
-        this.changeFormState("result")();
-      })
-      .catch(() => {
-        this.toggleNetworkErrorModal();
-        this.changeFormState("form")();
-      })
+  }
+
+  onRouteFound = route => {
+    this.setState({
+      route: route,
+    });
+    this.changeFormState("result")();
   }
 
   render() {
@@ -149,7 +149,7 @@ class App extends Component {
             <Spinner className={classes.spinner} color="blue" name="folding-cube" />
           }
           { this.state.formState === "result" &&
-            <FoundRoute returnToForm={this.changeFormState("form")} />
+            <FoundRoute returnToForm={this.changeFormState("form")} route={this.state.route} />
           }
         </Paper>
         <NetworkErrorModal

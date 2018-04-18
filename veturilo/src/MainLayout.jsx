@@ -24,15 +24,15 @@ const logoStyle = {
   marginTop: "1em",
   marginBottom: "1em",
 };
-const iconMargin = 3;
-const appBarIconStyle = {
-  height: "2.5em",
-  marginTop: iconMargin,
-  marginLeft: iconMargin + 5,
-  marginRight: iconMargin,
-  marginBottom: iconMargin,
-  verticalAlign: "middle",
-};
+// const iconMargin = 3;
+// const appBarIconStyle = {
+//   height: "2.5em",
+//   marginTop: iconMargin,
+//   marginLeft: iconMargin + 5,
+//   marginRight: iconMargin,
+//   marginBottom: iconMargin,
+//   verticalAlign: "middle",
+// };
 const buttonStyle = {
   width: drawerWidth,
 };
@@ -113,12 +113,14 @@ class MainLayout extends Component {
               Friturillo
             </Typography>
             <div>
+              {/*
               <a href="https://github.com/Ogochi/Veturilo---Frontend">
                 <img src="github.svg" style={appBarIconStyle} alt="Github Icon" />
               </a>
               <a href="https://github.com/tosi3k/io">
                 <img src="github.svg" style={appBarIconStyle} alt="Github Icon" />
               </a>
+              */}
             </div>
           </Toolbar>
         </AppBar>

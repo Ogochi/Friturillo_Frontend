@@ -5,23 +5,24 @@ import PropTypes from 'prop-types';
 class FoundRoute extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       steps: [],
     };
   }
-  
+
   render() {
     return (
       <div>
-        <Button 
-          variant="raised" 
-          color="primary" 
+        <Button
+          variant="raised"
+          color="primary"
           onClick={this.props.returnToForm}
           style={{margin: "1em 1em 1em 1em"}}
         >
           Powrót
         </Button>
+        this.props.route
       </div>
     );
   }
