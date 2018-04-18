@@ -1,4 +1,4 @@
-# Veturilo Frontend
+# Friturillo Frontend
 
 Build: npm install
 Starting website: npm start
