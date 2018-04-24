@@ -76,7 +76,7 @@ class AutoComplete extends Component {
 
   searchLocation = () => {
     Utils.getLocation(pos => {
-      this.changeInput(pos.coords.latitude + ", " + pos.coords.longitude);
+      this.changeInput(pos.coords.latitude + "," + pos.coords.longitude);
     }, () => {
       this.toggleNetworkErrorModal();
     });

@@ -12,6 +12,7 @@ class FoundRoute extends Component {
   }
 
   render() {
+	  console.log(this.props.route);
     return (
       <div>
         <Button
@@ -22,7 +23,7 @@ class FoundRoute extends Component {
         >
           Powrót
         </Button>
-        this.props.route
+	    {JSON.stringify(this.props.route.data)}
       </div>
     );
   }
