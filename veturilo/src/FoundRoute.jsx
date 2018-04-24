@@ -12,7 +12,9 @@ class FoundRoute extends Component {
   }
 
   render() {
-	  console.log(this.props.route);
+    let route = this.props.route.data.map(station => {
+      return (<div key={station.name}>{station.name} | {station.ETA / 60 | 0} minut</div>)
+    });
     return (
       <div>
         <Button
@@ -23,13 +25,14 @@ class FoundRoute extends Component {
         >
           Powrót
         </Button>
-	    {JSON.stringify(this.props.route.data)}
+        {route}
       </div>
     );
   }
 }
 
 FoundRoute.propTypes = {
+  route: PropTypes.arrayOf(PropTypes.element),
   returnToForm: PropTypes.func.isRequired,
 };
 

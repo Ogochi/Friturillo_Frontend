@@ -5,6 +5,7 @@ import List, { ListItem } from 'material-ui/List';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import Spinner from 'react-spinkit';
+import Grid from 'material-ui/Grid';
 import AutoComplete from './AutoComplete.jsx';
 import NetworkErrorModal from './NetworkErrorModal.jsx';
 import FoundRoute from './FoundRoute.jsx';
@@ -13,13 +14,9 @@ import consts from './consts.js';
 
 const styles = {
   paper: {
-    marginTop: "10%",
-    marginLeft: "10%",
-    marginRight: "auto",
-    position: "fixed",
-    height: "45%",
-    width: "18em",
-    minHeight: "11em"
+    marginTop: "20%",
+    minHeight: "13em",
+    minWidth: "18em",
   },
   spinner: {
     margin: "40% auto auto auto",
@@ -41,6 +38,7 @@ class App extends Component {
       networkErrorModalOpen: false,
       formState: "form",
       route: {},
+      height: 0,
     };
   }
 
@@ -114,44 +112,50 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <div style={{backgroundImage: "url('map.jpg')", height: this.state.height}}>
-        <Paper className={classes.paper}>
-          { this.state.formState === "form" &&
-            <List style={{marginTop: 20}}>
-              <ListItem>
-                <AutoComplete
-                  placeholder="Początek podróży"
-                  onChange={this.onInputChange('start')}
-                  labels={this.state.stations}
-                />
-              </ListItem>
-              <ListItem>
-                <AutoComplete
-                  placeholder="Koniec podróży"
-                  onChange={this.onInputChange('destination')}
-                  labels={this.state.stations}
-                />
-              </ListItem>
-              { this.state.start !== "" && this.state.destination !== "" &&
-              <ListItem>
-                <Button
-                  style={{marginLeft: "auto", marginRight: "auto"}}
-                  variant="raised"
-                  color="primary"
-                  onClick={this.onSubmitClicked}
-                >
-                  Szukaj
-                </Button>
-              </ListItem>
+        <Grid container direction="row" alignItems="center" justify="center" spacing={4}>
+          <Grid item>
+            <Paper className={classes.paper}>
+              { this.state.formState === "form" &&
+                <List style={{marginTop: 20}}>
+                  <ListItem>
+                    <AutoComplete
+                      placeholder="Początek podróży"
+                      onChange={this.onInputChange('start')}
+                      labels={this.state.stations}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <AutoComplete
+                      placeholder="Koniec podróży"
+                      onChange={this.onInputChange('destination')}
+                      labels={this.state.stations}
+                    />
+                  </ListItem>
+                  { this.state.start !== "" && this.state.destination !== "" &&
+                  <ListItem>
+                    <Button
+                      style={{marginLeft: "auto", marginRight: "auto"}}
+                      variant="raised"
+                      color="primary"
+                      onClick={this.onSubmitClicked}
+                    >
+                      Szukaj
+                    </Button>
+                  </ListItem>
+                  }
+                </List>
               }
-            </List>
-          }
-          { this.state.formState === "waiting" &&
-            <Spinner className={classes.spinner} color="blue" name="folding-cube" />
-          }
-          { this.state.formState === "result" &&
-            <FoundRoute returnToForm={this.changeFormState("form")} route={this.state.route} />
-          }
-        </Paper>
+              { this.state.formState === "waiting" &&
+                <Spinner className={classes.spinner} color="blue" name="folding-cube" />
+              }
+              { this.state.formState === "result" &&
+                <FoundRoute returnToForm={this.changeFormState("form")} route={this.state.route} />
+              }
+            </Paper>
+          </Grid>
+          <Grid item>
+          </Grid>
+        </Grid>
         <NetworkErrorModal
           onClose={this.toggleNetworkErrorModal}
           onRetry={this.getStations(false)}
