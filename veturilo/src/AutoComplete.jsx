@@ -39,8 +39,8 @@ class AutoComplete extends Component {
 
   componentWillReceiveProps(props) {
     const listItems = props.labels.map(label => (
-      <div key={label.name}>
-        <ListItem key={label.name} button onMouseDown={this.handleListItemClicked}>
+      <div key={label.name} onMouseDown={this.handleListItemClicked}>
+        <ListItem key={label.name} button>
           <ListItemText primary={label.name} />
         </ListItem>
         <Divider />
@@ -59,8 +59,13 @@ class AutoComplete extends Component {
     }));
   }
 
-  handleListItemClicked = event =>
-    this.changeInput(event.target.childNodes[0].data)
+  handleListItemClicked = event => {
+    /* Sometimes input loses focus faster than we can capture event target
+     * correctly so we persist event.
+     */
+    event.persist();
+    this.changeInput(event.target.innerText);
+  }
 
   handleInputChanged = event => {
     this.changeInput(event.target.value);

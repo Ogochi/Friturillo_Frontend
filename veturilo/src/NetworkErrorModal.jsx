@@ -25,18 +25,18 @@ const styles = theme => ({
 class NetworkErrorModal extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       open: false,
     }
   }
-  
+
   componentWillReceiveProps(props) {
     this.setState({
       open: props.open,
     });
   }
-  
+
   render() {
     const { classes } = this.props;
     return (
@@ -57,7 +57,7 @@ class NetworkErrorModal extends Component {
           <div style={{marginTop: "1em"}}>
             <Button
               style={{width: "5em"}}
-              variant="raised" 
+              variant="raised"
               color="primary"
               onClick={this.props.onRetry}
             >
@@ -65,11 +65,11 @@ class NetworkErrorModal extends Component {
             </Button>
             <Button
               style={{width: "5em"}}
-              variant="raised" 
+              variant="raised"
               color="secondary"
               onClick={this.props.onCancell}
             >
-              Cancell
+              Cancel
             </Button>
           </div>
         </div>

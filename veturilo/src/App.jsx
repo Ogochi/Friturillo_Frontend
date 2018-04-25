@@ -112,7 +112,7 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <div style={{backgroundImage: "url('map.jpg')", height: this.state.height}}>
-        <Grid container direction="row" alignItems="center" justify="center" spacing={4}>
+        <Grid container direction="row" alignItems="center" justify="center">
           <Grid item>
             <Paper className={classes.paper}>
               { this.state.formState === "form" &&

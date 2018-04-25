@@ -3,8 +3,8 @@ const consts = {
   veturiloApi: `http://api.nextbike.net/maps/nextbike-official.xml?city=210`,
   routeApi: `http://193.0.96.129:3333/dijkstra`,
   networkErrorModalTitle: "Network Connection Error",
-  networkErrorModalContent: `Unfortunatelly occured network connection error.
-    You can either retry to make a connection or cancell.`,
+  networkErrorModalContent: `Unfortunately occured network connection error.
+    You can either retry to make a connection or cancel.`,
   gpsErrorModalTitle: "GPS Error",
   gpsErrorModalContent: `Geolocations is either not supported by this browser or
     is currently not available.`,
