@@ -36,6 +36,7 @@ class App extends Component {
       destination: "",
       stations: [],
       networkErrorModalOpen: false,
+      backendErrorModalOpen: false,
       formState: "form",
       route: {},
       height: 0,
@@ -57,13 +58,13 @@ class App extends Component {
 
   getStations = isItFirstTime => () => {
     if (!isItFirstTime)
-      this.toggleNetworkErrorModal();
-    Utils.getStations(this.onStationsReceived, this.toggleNetworkErrorModal);
+      this.toggleModal("networkErrorModal")();
+    Utils.getStations(this.onStationsReceived, this.toggleModal("networkErrorModal"));
   }
 
-  toggleNetworkErrorModal = () => {
+  toggleModal = modalName => () => {
     this.setState( prevState => ({
-      networkErrorModalOpen: !prevState.networkErrorModalOpen,
+      [`${modalName}Open`]: !prevState[`${modalName}Open`],
     }));
   }
 
@@ -96,7 +97,7 @@ class App extends Component {
 
   getRoute = () => {
     Utils.getRoute(this.state.start, this.state.destination, this.onRouteFound, () => {
-      this.toggleNetworkErrorModal();
+      this.toggleModal("backendErrorModal")();
       this.changeFormState("form")();
     })
   }
@@ -157,10 +158,18 @@ class App extends Component {
           </Grid>
         </Grid>
         <NetworkErrorModal
-          onClose={this.toggleNetworkErrorModal}
+          onClose={this.toggleModal("networkErrorModal")}
           onRetry={this.getStations(false)}
-          onCancell={this.toggleNetworkErrorModal}
+          onCancell={this.toggleModal("networkErrorModal")}
           open={this.state.networkErrorModalOpen}
+          title={consts.networkErrorModalTitle}
+          content={consts.networkErrorModalContent}
+        />
+        <NetworkErrorModal
+          onClose={this.toggleModal("backendErrorModal")}
+          onRetry={this.onSubmitClicked}
+          onCancell={this.toggleModal("backendErrorModal")}
+          open={this.state.backendErrorModalOpen}
           title={consts.networkErrorModalTitle}
           content={consts.networkErrorModalContent}
         />
