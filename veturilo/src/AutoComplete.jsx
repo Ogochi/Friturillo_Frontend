@@ -64,24 +64,27 @@ class AutoComplete extends Component {
      * correctly so we persist event.
      */
     event.persist();
-    this.changeInput(event.target.innerText);
+    this.changeInput({value: event.target.innerText, isCorrect: true});
   }
 
   handleInputChanged = event => {
-    this.changeInput(event.target.value);
+    this.changeInput({value: event.target.value, isCorrect: false});
   }
 
-  changeInput = value => {
+  changeInput = input => {
     this.setState({
-      inputValue: value,
-      inputLength: value.length,
+      inputValue: input.value,
+      inputLength: input.value.length,
     });
-    this.state.onChange(value);
+    this.state.onChange(input);
   }
 
   searchLocation = () => {
     Utils.getLocation(pos => {
-      this.changeInput(pos.coords.latitude + "," + pos.coords.longitude);
+      this.changeInput({
+        value: pos.coords.latitude + "," + pos.coords.longitude,
+        isCorrect: true,
+      });
     }, () => {
       this.toggleNetworkErrorModal();
     });

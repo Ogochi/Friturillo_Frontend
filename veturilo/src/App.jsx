@@ -32,8 +32,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      start: "",
-      destination: "",
+      start: {value: "", isCorrect: false}, // isCorrect if selected from autocomplete
+      destination: {value: "", isCorrect: false},
       stations: [],
       networkErrorModalOpen: false,
       backendErrorModalOpen: false,
@@ -78,9 +78,9 @@ class App extends Component {
     });
   }
 
-  onInputChange = name => value => {
+  onInputChange = inputName => value => {
     this.setState({
-      [name]: value,
+      [inputName]: value,
     });
   }
 
@@ -96,7 +96,7 @@ class App extends Component {
   }
 
   getRoute = () => {
-    Utils.getRoute(this.state.start, this.state.destination, this.onRouteFound, () => {
+    Utils.getRoute(this.state.start.value, this.state.destination.value, this.onRouteFound, () => {
       this.toggleModal("backendErrorModal")();
       this.changeFormState("form")();
     })
@@ -132,7 +132,7 @@ class App extends Component {
                       labels={this.state.stations}
                     />
                   </ListItem>
-                  { this.state.start !== "" && this.state.destination !== "" &&
+                  { this.state.start.isCorrect && this.state.destination.isCorrect &&
                   <ListItem>
                     <Button
                       style={{marginLeft: "auto", marginRight: "auto"}}
