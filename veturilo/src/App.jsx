@@ -68,15 +68,10 @@ class App extends Component {
     }));
   }
 
-  onStationsReceived = stations => {
-    let stationsNames = stations.map(s => ({
-      name: s._attributes.name
-    }));
-
+  onStationsReceived = stations =>
     this.setState({
-      stations: stationsNames,
-    });
-  }
+      stations: stations,
+    })
 
   onInputChange = inputName => value => {
     this.setState({
@@ -122,14 +117,14 @@ class App extends Component {
                     <AutoComplete
                       placeholder="Początek podróży"
                       onChange={this.onInputChange('start')}
-                      labels={this.state.stations}
+                      labels={this.state.stations.map(s => ({name: s.name}))}
                     />
                   </ListItem>
                   <ListItem>
                     <AutoComplete
                       placeholder="Koniec podróży"
                       onChange={this.onInputChange('destination')}
-                      labels={this.state.stations}
+                      labels={this.state.stations.map(s => ({name: s.name}))}
                     />
                   </ListItem>
                   { this.state.start.isCorrect && this.state.destination.isCorrect &&

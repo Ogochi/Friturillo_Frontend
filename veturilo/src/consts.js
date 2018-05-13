@@ -1,7 +1,7 @@
 
 const consts = {
-  veturiloApi: `http://api.nextbike.net/maps/nextbike-official.xml?city=210`,
-  routeApi: `http://193.0.96.129:3333/dijkstra`,
+  stationsApi: `http://localhost:6666/stations`,
+  routeApi: `http://localhost:6666/dijkstra`,
   networkErrorModalTitle: "Network Connection Error",
   networkErrorModalContent: `Unfortunately occured network connection error.
     You can either retry to make a connection or cancel.`,
