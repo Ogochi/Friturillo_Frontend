@@ -1,7 +1,7 @@
 
 const consts = {
-  stationsApi: `http://localhost:6666/stations`,
-  routeApi: `http://localhost:6666/dijkstra`,
+  stationsApi: `http://localhost:6161/stations`,
+  routeApi: `http://localhost:6161/dijkstra`,
   networkErrorModalTitle: "Network Connection Error",
   networkErrorModalContent: `Unfortunately occured network connection error.
     You can either retry to make a connection or cancel.`,
