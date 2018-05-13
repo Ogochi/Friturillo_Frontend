@@ -4,7 +4,7 @@ import Input, { InputAdornment } from 'material-ui/Input';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import Cancel from 'material-ui-icons/Cancel';
-import LocationOn from 'material-ui-icons/LocationOn';
+import MyLocation from 'material-ui-icons/MyLocation';
 import Chip from 'material-ui/Chip';
 import PropTypes from 'prop-types';
 import NetworkErrorModal from './NetworkErrorModal.jsx';
@@ -116,7 +116,7 @@ class AutoComplete extends Component {
                 <InputAdornment>
                   {this.state.inputLength ?
                     (<Cancel style={{color: "gray"}} onClick={() => this.changeInput({value: ""})} />) :
-                    (<LocationOn style={{color: "gray"}} onClick={this.searchLocation} />)
+                    (<MyLocation style={{color: "gray"}} onClick={this.searchLocation} />)
                   }
                 </InputAdornment>
               }

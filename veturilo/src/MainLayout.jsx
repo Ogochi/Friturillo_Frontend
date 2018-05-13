@@ -33,6 +33,7 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: '0 8px',
+    cursor: "pointer",
     ...theme.mixins.toolbar,
   },
 });
