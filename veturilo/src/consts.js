@@ -1,6 +1,7 @@
 
 const consts = {
   stationsApi: `http://localhost:6161/stations`,
+  stationsWithBikesApi: `https://api.nextbike.net/maps/nextbike-official.xml?city=210`,
   routeApi: `http://localhost:6161/dijkstra`,
   networkErrorModalTitle: "Network Connection Error",
   networkErrorModalContent: `Unfortunately occured network connection error.

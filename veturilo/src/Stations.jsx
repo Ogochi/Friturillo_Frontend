@@ -33,7 +33,7 @@ class Stations extends Component {
     this.toggleSpinner();
     if (!isItFirstTime)
       this.toggleNetworkErrorModal();
-    Utils.getStations(this.onStationsReceived, () => {
+    Utils.getStationsWithBikesInfo(this.onStationsReceived, () => {
       this.toggleSpinner();
       this.toggleNetworkErrorModal();
     });

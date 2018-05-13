@@ -1,11 +1,24 @@
 import axios from 'axios';
 import consts from './consts.js';
+import converter from 'xml-js';
 
 class Utils {
   static getStations(onSuccess, onError) {
     axios.get(consts.stationsApi, {
       timeout: 4000,
     }).then(res => onSuccess(res.data.stations)).catch(onError);
+  }
+  static getStationsWithBikesInfo(onSuccess,onError) {
+    axios.get(consts.stationsWithBikesApi, {
+      timeout: 4000,
+    }).then(res => {
+        let stations = JSON.parse(
+          converter.xml2json(res.data, {compact: true, spaces: 4}))
+            .markers.country.city.place;
+
+        onSuccess(stations);
+      })
+      .catch(onError);
   }
   static getRoute(stationA, stationB, onSuccess, onError) {
     axios.get(consts.routeApi, {
