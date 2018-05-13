@@ -75,7 +75,7 @@ class MainLayout extends Component {
           <Divider />
           <div style={{width: drawerWidth, height: "100%", display: "block"}}>
             <Link to="/">
-              <img style={logoStyle} src="logo.png" alt="Friturillo Logo" />
+              <img style={logoStyle} src="logo.svg" alt="Friturillo Logo" />
             </Link>
             <Divider />
             <List style={{paddingTop: 0, paddingBottom: 0}} {...menuOnClick}>
