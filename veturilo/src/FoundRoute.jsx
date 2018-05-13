@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import Button from 'material-ui/Button';
 import PropTypes from 'prop-types';
+import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
+import Divider from 'material-ui/Divider';
+import Grid from 'material-ui/Grid';
 
 class FoundRoute extends Component {
   constructor(props) {
@@ -17,15 +19,18 @@ class FoundRoute extends Component {
     });
     return (
       <div>
-        <Button
-          variant="raised"
-          color="primary"
+        <Grid
+          container
+          alignItems="center"
           onClick={this.props.returnToForm}
-          style={{margin: "1em 1em 1em 1em"}}
+          style={{height: "3em", width: "100%"}}
         >
-          Powrót
-        </Button>
-        {route}
+          <ChevronLeftIcon style={{marginLeft: "1em"}} />
+        </Grid>
+        <Divider />
+        <div style={{margin: "1em 1em 1em 1em"}}>
+          {route}
+        </div>
       </div>
     );
   }

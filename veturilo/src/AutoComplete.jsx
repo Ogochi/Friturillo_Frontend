@@ -115,7 +115,7 @@ class AutoComplete extends Component {
               endAdornment={
                 <InputAdornment>
                   {this.state.inputLength ?
-                    (<Cancel style={{color: "gray"}} onClick={() => this.changeInput("")} />) :
+                    (<Cancel style={{color: "gray"}} onClick={() => this.changeInput({value: ""})} />) :
                     (<LocationOn style={{color: "gray"}} onClick={this.searchLocation} />)
                   }
                 </InputAdornment>
