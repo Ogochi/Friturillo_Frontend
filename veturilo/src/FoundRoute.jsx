@@ -36,7 +36,7 @@ class FoundRoute extends Component {
       route.push(this.renderStation(this.props.route.data[i].name));
     }
 
-    let time = (this.props.route.data.pop().ETA / 60).toPrecision(2);
+    let time = Math.round(this.props.route.data.pop().ETA / 60);
     return (
       <div>
         <Grid

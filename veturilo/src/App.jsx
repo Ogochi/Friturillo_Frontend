@@ -16,7 +16,7 @@ const styles = {
   paper: {
     marginTop: "20%",
     minHeight: "13em",
-    minWidth: "18em",
+    minWidth: "19em",
     maxWidth: "80%",
   },
   spinner: {
@@ -119,11 +119,11 @@ class App extends Component {
     this.state.stations.forEach(s => {
       if (s.name === input) {
         isStation = true;
-        station = s.lat + "," + s.lon;
+        station = s.lat + "|" + s.lon;
         return;
       }
     });
-    if (/\d+\.\d+,\d+\.\d+/.test(input) || isStation) {
+    if (/\d+\.\d+\|\d+\.\d+/.test(input) || isStation) {
       this.setState({
         [inputName + "Gps"]: station,
       });

@@ -39,11 +39,11 @@ class Utils {
       onError();
     }
   }
-  static async getAddressGps(address, onSuccess) {
+  static getAddressGps(address, onSuccess) {
     let geo = new google.maps.Geocoder();
     geo.geocode({
       address: address,
-    }, res => onSuccess(res[0].geometry.location.lat() + "," + res[0].geometry.location.lng()));
+    }, res => onSuccess(res[0].geometry.location.lat() + "|" + res[0].geometry.location.lng()));
   }
   static isMobile() {
     const w = window,
