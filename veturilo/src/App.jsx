@@ -34,7 +34,9 @@ class App extends Component {
 
     this.state = {
       start: {value: "", isCorrect: false}, // isCorrect if selected from autocomplete
+      startGps: "",
       destination: {value: "", isCorrect: false},
+      destGps: "",
       stations: [],
       networkErrorModalOpen: false,
       backendErrorModalOpen: false,
@@ -75,6 +77,7 @@ class App extends Component {
     })
 
   onInputChange = inputName => value => {
+    this.parseInput(inputName, value.value);
     this.setState({
       [inputName]: value,
     });
@@ -98,7 +101,7 @@ class App extends Component {
   }
 
   getRoute = () => {
-    Utils.getRoute(this.state.start.value, this.state.destination.value, this.onRouteFound, () => {
+    Utils.getRoute(this.state.startGps, this.state.destinationGps, this.onRouteFound, () => {
       this.toggleModal("backendErrorModal")();
       this.changeFormState("form")();
     })
@@ -110,6 +113,30 @@ class App extends Component {
     });
     this.changeFormState("result")();
   }
+
+  parseInput = (inputName, input) => {
+    let isStation = false, station = input;
+    this.state.stations.forEach(s => {
+      if (s.name === input) {
+        isStation = true;
+        station = s.lat + "," + s.lon;
+        return;
+      }
+    });
+    if (/\d+\.\d+,\d+\.\d+/.test(input) || isStation) {
+      this.setState({
+        [inputName + "Gps"]: station,
+      });
+      return;
+    }
+
+    // We assume input is address
+    return Utils.getAddressGps(input, this.setGps(inputName));
+  }
+
+  setGps = inputName => gps => this.setState({
+    [inputName + "Gps"]: gps,
+  })
 
   render() {
     const { classes } = this.props;

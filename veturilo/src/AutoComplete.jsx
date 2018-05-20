@@ -82,7 +82,8 @@ class AutoComplete extends Component {
         radius: 10000,
         types: ["address"],
       }, res => {
-        console.log(res);
+        if (res === null)
+          return;
         let predictions = [];
         res.forEach(p => {
           if (p.description.includes("Warszawa")) {
