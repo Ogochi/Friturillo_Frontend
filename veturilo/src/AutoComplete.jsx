@@ -1,3 +1,4 @@
+/* global google */
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import Input, { InputAdornment } from 'material-ui/Input';
@@ -34,24 +35,28 @@ class AutoComplete extends Component {
       inputValue: "",
       inputLength: 0,
       modalOpen: false,
+      autoCompleteService: new google.maps.places.AutocompleteService(),
+      googlePredictions: [],
     };
   }
 
   componentWillReceiveProps(props) {
-    const listItems = props.labels.map(label => (
-      <div key={label.name} onMouseDown={this.handleListItemClicked}>
-        <ListItem key={label.name} button>
-          <ListItemText primary={label.name} />
-        </ListItem>
-        <Divider />
-      </div>
-    ))
+    const listItems = props.labels.map(label => this.renderLabel(label.name));
 
     this.setState({
       labels: listItems,
       modalOpen: false,
     });
   }
+
+  renderLabel = labelName => (
+    <div key={labelName} onMouseDown={this.handleListItemClicked}>
+      <ListItem key={labelName} button>
+        <ListItemText primary={labelName} />
+      </ListItem>
+      <Divider />
+    </div>
+  )
 
   changeFocus = () => {
     this.setState(prevState => ({
@@ -69,6 +74,26 @@ class AutoComplete extends Component {
 
   handleInputChanged = event => {
     this.changeInput({value: event.target.value, isCorrect: false});
+    if (event.target.value.length >= 2) {
+      this.state.autoCompleteService.getPlacePredictions({
+        componentRestrictions: {country: 'pl'},
+        input: event.target.value,
+        location: new google.maps.LatLng({lat: 52.226071, lng:21.006777}),
+        radius: 10000,
+        types: ["address"],
+      }, res => {
+        console.log(res);
+        let predictions = [];
+        res.forEach(p => {
+          if (p.description.includes("Warszawa")) {
+            predictions.push(this.renderLabel(p.description));
+          }
+        });
+        this.setState({
+          googlePredictions: predictions,
+        });
+      });
+    }
   }
 
   changeInput = input => {
@@ -125,10 +150,12 @@ class AutoComplete extends Component {
           }
         />
 
-        { this.state.focused && this.state.inputLength >= 2 && filteredLabels.length > 0 &&
+        { this.state.focused && this.state.inputLength >= 2 &&
+          filteredLabels.length + this.state.googlePredictions.length > 0 &&
           <Paper style={paperStyle}>
             <List>
               {filteredLabels}
+              {this.state.googlePredictions}
             </List>
           </Paper>
         }
