@@ -17,6 +17,7 @@ const styles = {
     marginTop: "20%",
     minHeight: "13em",
     minWidth: "18em",
+    maxWidth: "80%",
   },
   spinner: {
     margin: "40% auto auto auto",
@@ -80,6 +81,12 @@ class App extends Component {
   }
 
   changeFormState = newState => () => {
+    if (newState === "form") {
+      this.setState(prev => ({
+        start: {value: prev.start.value, isCorrect: false},
+        destination: {value: prev.destination.value, isCorrect: false},
+      }));
+    }
     this.setState({
       formState: newState,
     });
@@ -111,36 +118,38 @@ class App extends Component {
         <Grid container direction="row" alignItems="center" justify="center">
           <Grid item>
             <Paper className={classes.paper}>
-              { this.state.formState === "form" &&
-                <List style={{marginTop: 20}}>
-                  <ListItem>
-                    <AutoComplete
-                      placeholder="Początek podróży"
-                      onChange={this.onInputChange('start')}
-                      labels={this.state.stations.map(s => ({name: s.name}))}
-                    />
-                  </ListItem>
-                  <ListItem>
-                    <AutoComplete
-                      placeholder="Koniec podróży"
-                      onChange={this.onInputChange('destination')}
-                      labels={this.state.stations.map(s => ({name: s.name}))}
-                    />
-                  </ListItem>
-                  { this.state.start.isCorrect && this.state.destination.isCorrect &&
-                  <ListItem>
-                    <Button
-                      style={{marginLeft: "auto", marginRight: "auto"}}
-                      variant="raised"
-                      color="primary"
-                      onClick={this.onSubmitClicked}
-                    >
-                      Szukaj
-                    </Button>
-                  </ListItem>
-                  }
-                </List>
-              }
+              <Grid container justify="center" alignItems="center">
+                { this.state.formState === "form" &&
+                  <List style={{marginTop: 20}}>
+                    <ListItem>
+                      <AutoComplete
+                        placeholder="Początek podróży"
+                        onChange={this.onInputChange('start')}
+                        labels={this.state.stations.map(s => ({name: s.name}))}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <AutoComplete
+                        placeholder="Koniec podróży"
+                        onChange={this.onInputChange('destination')}
+                        labels={this.state.stations.map(s => ({name: s.name}))}
+                      />
+                    </ListItem>
+                    { this.state.start.isCorrect && this.state.destination.isCorrect &&
+                    <ListItem>
+                      <Button
+                        style={{marginLeft: "auto", marginRight: "auto"}}
+                        variant="raised"
+                        color="primary"
+                        onClick={this.onSubmitClicked}
+                      >
+                        Szukaj
+                      </Button>
+                    </ListItem>
+                    }
+                  </List>
+                }
+              </Grid>
               { this.state.formState === "waiting" &&
                 <Spinner className={classes.spinner} color="blue" name="folding-cube" />
               }

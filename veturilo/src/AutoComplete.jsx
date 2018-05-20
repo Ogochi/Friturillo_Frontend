@@ -72,10 +72,10 @@ class AutoComplete extends Component {
   }
 
   changeInput = input => {
-    this.setState({
+    this.setState(prev => ({
       inputValue: input.value,
       inputLength: input.value.length,
-    });
+    }));
     this.state.onChange(input);
   }
 
@@ -107,6 +107,7 @@ class AutoComplete extends Component {
           style={{height: "3em"}}
           label={
             <Input
+              fullWidth
               placeholder={this.state.placeholder}
               onChange={this.handleInputChanged}
               onFocus={this.changeFocus}

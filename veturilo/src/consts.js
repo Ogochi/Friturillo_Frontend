@@ -1,8 +1,10 @@
 
+const serverIp = "77.55.218.173";
+
 const consts = {
-  stationsApi: `http://localhost:6161/stations`,
+  stationsApi: `http://${serverIp}:6161/stations`,
   stationsWithBikesApi: `https://api.nextbike.net/maps/nextbike-official.xml?city=210`,
-  routeApi: `http://localhost:6161/dijkstra`,
+  routeApi: `http://${serverIp}:6161/dijkstra`,
   networkErrorModalTitle: "Network Connection Error",
   networkErrorModalContent: `Unfortunately occured network connection error.
     You can either retry to make a connection or cancel.`,
