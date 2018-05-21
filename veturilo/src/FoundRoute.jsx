@@ -16,7 +16,7 @@ class FoundRoute extends Component {
   }
 
   renderStation = name => (
-    <Grid container alignItems="center" key={name + "point"}>
+    <Grid container alignItems="center" key={name + "point"} wrap="nowrap">
       <LocationIcon style={{marginRight: "1em"}} />
       <span>{name}</span>
     </Grid>
