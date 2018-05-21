@@ -16,14 +16,14 @@ class FoundRoute extends Component {
   }
 
   renderStation = name => (
-    <Grid container alignItems="center">
+    <Grid container alignItems="center" key={name + "point"}>
       <LocationIcon style={{marginRight: "1em"}} />
       <span>{name}</span>
     </Grid>
   )
 
   renderTimeBetween = time => (
-    <Typography variant="caption" align="center">
+    <Typography variant="caption" align="center" key={time + "time"}>
       Czas pomiędzy: {Math.round(time / 60)} minut
     </Typography>
   )
@@ -63,7 +63,7 @@ class FoundRoute extends Component {
 }
 
 FoundRoute.propTypes = {
-  route: PropTypes.arrayOf(PropTypes.element),
+  route: PropTypes.object,
   returnToForm: PropTypes.func.isRequired,
 };
 

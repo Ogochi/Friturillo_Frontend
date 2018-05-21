@@ -1,3 +1,4 @@
+/* global google */
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import Button from 'material-ui/Button';
@@ -43,6 +44,7 @@ class App extends Component {
       formState: "form",
       route: {},
       height: 0,
+      geocoder: new google.maps.Geocoder(),
     };
   }
 
@@ -83,7 +85,7 @@ class App extends Component {
     });
   }
 
-  changeFormState = newState => () => {
+  changeFormState = newState => async () => {
     if (newState === "form") {
       this.setState(prev => ({
         start: {value: prev.start.value, isCorrect: false},
@@ -96,11 +98,10 @@ class App extends Component {
   }
 
   onSubmitClicked = () => {
-    this.changeFormState("waiting")();
-    this.getRoute();
+    this.changeFormState("waiting")().then(this.getRoute());
   }
 
-  getRoute = () => {
+  getRoute = async () => {
     Utils.getRoute(this.state.startGps, this.state.destinationGps, this.onRouteFound, () => {
       this.toggleModal("backendErrorModal")();
       this.changeFormState("form")();
@@ -131,7 +132,7 @@ class App extends Component {
     }
 
     // We assume input is address
-    return Utils.getAddressGps(input, this.setGps(inputName));
+    return Utils.getAddressGps(input, this.state.geocoder, this.setGps(inputName));
   }
 
   setGps = inputName => gps => this.setState({

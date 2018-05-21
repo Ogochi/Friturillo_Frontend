@@ -1,4 +1,3 @@
-/* global google */
 import axios from 'axios';
 import consts from './consts.js';
 import converter from 'xml-js';
@@ -39,11 +38,13 @@ class Utils {
       onError();
     }
   }
-  static getAddressGps(address, onSuccess) {
-    let geo = new google.maps.Geocoder();
-    geo.geocode({
+  static getAddressGps(address, geocoder, onSuccess) {
+    geocoder.geocode({
       address: address,
-    }, res => onSuccess(res[0].geometry.location.lat() + "|" + res[0].geometry.location.lng()));
+    }, res => {
+      if (res.length > 0 && res[0].geometry !== undefined)
+        onSuccess(res[0].geometry.location.lat() + "|" + res[0].geometry.location.lng());
+    });
   }
   static isMobile() {
     const w = window,
