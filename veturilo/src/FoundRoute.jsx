@@ -24,7 +24,7 @@ class FoundRoute extends Component {
 
   renderTimeBetween = time => (
     <Typography variant="caption" align="center">
-      Czas pomiędzy: {(time / 60).toPrecision(2)} minut
+      Czas pomiędzy: {Math.round(time / 60)} minut
     </Typography>
   )
 
