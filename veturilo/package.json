@@ -5,6 +5,7 @@
   "dependencies": {
     "ajv": "^6.4.0",
     "axios": "^0.18.0",
+    "google-maps-react": "^2.0.2",
     "material-ui": "^1.0.0-beta.40",
     "material-ui-icons": "^1.0.0-beta.36",
     "react": "^16.2.0",
