@@ -31,12 +31,12 @@ class Stations extends Component {
 
   getStations = isItFirstTime => () => {
     this.toggleSpinner();
-/*    if (!isItFirstTime)
+    if (!isItFirstTime)
       this.toggleNetworkErrorModal();
     Utils.getStationsWithBikesInfo(this.onStationsReceived, () => {
       this.toggleSpinner();
       this.toggleNetworkErrorModal();
-    });*/
+    });
   }
 
   toggleNetworkErrorModal = () => {
