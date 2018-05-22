@@ -58,15 +58,15 @@ class SimpleSelect extends React.Component {
         const {classes} = this.props;
 
         return (
-            <form className={classes.root} autoComplete="off">
+            <form className={classes.root} autoComplete="off" action="{% url 'send_mail' %}" method="POST">
                 <Grid container direction="column" alignItems="center" justify="center" spacing={0}>
                     <Paper>
-
                         <Grid item>
                             <FormControl className={classes.formControl} direction="column">
 
                                 <InputLabel>W jakiej sprawie się kontaktujesz?</InputLabel>
                                 <Select
+                                    name="topic"
                                     value={this.state.topic}
                                     onChange={this.handleChange}
                                     inputProps={{
@@ -88,6 +88,7 @@ class SimpleSelect extends React.Component {
                         <Grid item>
                             <FormControl className={classes.formControl}>
                                 <TextField
+                                    name="firstName"
                                     required
                                     id="firstName"
                                     label="Imię"
@@ -99,6 +100,7 @@ class SimpleSelect extends React.Component {
                         <Grid item>
                             <FormControl className={classes.formControl}>
                                 <TextField
+                                    name="secondName"
                                     id="secondName"
                                     label="Nazwisko"
                                     type="text"
@@ -109,6 +111,7 @@ class SimpleSelect extends React.Component {
                         <Grid item>
                             <FormControl className={classes.formControl}>
                                 <TextField
+                                    name="email"
                                     required
                                     id="email"
                                     label="Email"
@@ -120,6 +123,7 @@ class SimpleSelect extends React.Component {
                         <Grid item>
                             <FormControl className={classes.formControl}>
                                 <TextField
+                                    name="content"
                                     required
                                     id="message"
                                     label="Wiadomość"
@@ -131,14 +135,12 @@ class SimpleSelect extends React.Component {
                         </Grid>
 
                         <Grid item>
-                            <Button variant="raised" color="primary" className={classes.button}>
+                            <Button type="submit" variant="raised" color="primary" className={classes.button}>
                                 Wyślij
                             </Button>
                         </Grid>
                     </Paper>
-
                 </Grid>
-
             </form>
 
         );
