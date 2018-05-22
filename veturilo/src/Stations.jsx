@@ -121,6 +121,7 @@ class Stations extends Component {
           <Spinner
             color="blue"
             name="folding-cube"
+            fadeIn="none"
             style={{
               width: 70,
               height: 70,

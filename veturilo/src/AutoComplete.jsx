@@ -102,6 +102,7 @@ class AutoComplete extends Component {
       inputValue: input.value,
       inputLength: input.value.length,
     }));
+    
     this.state.onChange(input);
   }
 
@@ -135,7 +136,7 @@ class AutoComplete extends Component {
             <Input
               fullWidth
               placeholder={this.state.placeholder}
-              onChange={this.handleInputChanged}
+              onInput={this.handleInputChanged}
               onFocus={this.changeFocus}
               onBlur={this.changeFocus}
               value={this.state.inputValue}

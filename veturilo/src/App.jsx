@@ -21,11 +21,9 @@ const styles = {
     maxWidth: "80%",
   },
   spinner: {
-    margin: "40% auto auto auto",
-    top: 0,
-    left: 0,
-    width: "20%",
-    height: "20%",
+    marginTop: "20%",
+    width: "5em",
+    height: "5em",
   },
 };
 
@@ -79,7 +77,9 @@ class App extends Component {
     })
 
   onInputChange = inputName => value => {
-    this.parseInput(inputName, value.value);
+    if (value.isCorrect) {
+      this.parseInput(inputName, value.value);
+    }
     this.setState({
       [inputName]: value,
     });
@@ -98,7 +98,7 @@ class App extends Component {
   }
 
   onSubmitClicked = () => {
-    this.changeFormState("waiting")().then(this.getRoute());
+    this.changeFormState("waiting")().then(this.getRoute);
   }
 
   getRoute = async () => {
@@ -177,10 +177,10 @@ class App extends Component {
                     }
                   </List>
                 }
+                { this.state.formState === "waiting" &&
+                  <Spinner fadeIn="none" className={classes.spinner} color="blue" name="folding-cube" />
+                }
               </Grid>
-              { this.state.formState === "waiting" &&
-                <Spinner className={classes.spinner} color="blue" name="folding-cube" />
-              }
               { this.state.formState === "result" &&
                 <FoundRoute returnToForm={this.changeFormState("form")} route={this.state.route} />
               }
@@ -199,7 +199,7 @@ class App extends Component {
         />
         <NetworkErrorModal
           onClose={this.toggleModal("backendErrorModal")}
-          onRetry={this.onSubmitClicked}
+          onRetry={() => {this.toggleModal("backendErrorModal"); this.onSubmitClicked();}}
           onCancell={this.toggleModal("backendErrorModal")}
           open={this.state.backendErrorModalOpen}
           title={consts.networkErrorModalTitle}
