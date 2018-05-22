@@ -52,7 +52,7 @@ export class MapContainer extends Component {
         return (
             <Grid container>
 
-                 <Grid item>
+                <Grid item>
                     <Grid container direction="row">
                         <Grid item>
                             <Grid
@@ -76,43 +76,23 @@ export class MapContainer extends Component {
                         </Grid>
 
                         <Grid item>
-                            <Grid
-                                container
-                                alignItems="center"
-                                onClick={this.props.returnToForm}
-                                style={{height: "3em", width: "100%", cursor: "pointer"}}
-                            >
-                                <ChevronLeftIcon style={{marginLeft: "1em"}}/>
-                            </Grid>
-                            <Divider/>
-                            <div style={{margin: "1em"}}>
-                                {route}
-                            </div>
-                            <Divider/>
-                            <div style={{margin: "1em"}}>
-                                <Grid container justify="center" alignItems="center">
-                                    <Grid item>Pełen czas podróży: {time} minut</Grid>
-                                </Grid>
+                            <div className={style}>
+                                <Map google={this.props.google} zoom={14}>
+
+                                    <Marker onClick={this.onMarkerClick}
+                                            name={'Current location'}/>
+
+                                    <InfoWindow onClose={this.onInfoWindowClose}>
+                                        <div>
+                                            <h1>Elo elo 3 2 0</h1>
+                                        </div>
+                                    </InfoWindow>
+                                </Map>
                             </div>
                         </Grid>
                     </Grid>
                 </Grid>
-                
-                <Grid item>
-                    <div className={style}>
-                        <Map google={this.props.google} zoom={14}>
 
-                            <Marker onClick={this.onMarkerClick}
-                                    name={'Current location'}/>
-
-                            <InfoWindow onClose={this.onInfoWindowClose}>
-                                <div>
-                                    <h1>Elo elo 3 2 0</h1>
-                                </div>
-                            </InfoWindow>
-                        </Map>
-                    </div>
-                </Grid>
 
             </Grid>
         );
