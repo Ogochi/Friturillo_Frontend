@@ -22,9 +22,9 @@ class FoundRoute extends Component {
     </Grid>
   )
 
-  renderTimeBetween = time => (
-    <Typography variant="caption" align="center" key={time + "time"}>
-      Czas pomiędzy: {Math.round(time / 60)} minut
+  renderCaption = text => (
+    <Typography variant="caption" align="center" key={text + "text"}>
+      {text}
     </Typography>
   )
 
@@ -32,7 +32,9 @@ class FoundRoute extends Component {
     let route = [this.renderStation(this.props.route.data[0].name)];
     for (let i = 1; i < this.props.route.data.length; i++) {
       let timeBetween = this.props.route.data[i].ETA - this.props.route.data[i - 1].ETA;
-      route.push(this.renderTimeBetween(timeBetween));
+      let distanceBetween = this.props.route.data[i].length - this.props.route.data[i - 1].length;
+      route.push(this.renderCaption(`Czas pomiędzy: ${Math.round(timeBetween / 60)} minut`));
+      route.push(this.renderCaption(`Odległość pomiędzy: ${Math.round(distanceBetween / 1000)} km`));
       route.push(this.renderStation(this.props.route.data[i].name));
     }
 
