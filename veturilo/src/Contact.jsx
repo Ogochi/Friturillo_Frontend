@@ -74,9 +74,6 @@ class SimpleSelect extends React.Component {
                                         id: 'topic-simple',
                                     }}
                                 >
-                                    <MenuItem value="">
-                                        <em>wybierz temat...</em>
-                                    </MenuItem>
                                     <MenuItem value={1}>Zgłaszam błąd na stronie</MenuItem>
                                     <MenuItem value={2}>Potrzebuję pomocy</MenuItem>
                                     <MenuItem value={3}>Propozycja współpracy</MenuItem>
