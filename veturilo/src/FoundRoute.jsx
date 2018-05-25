@@ -84,15 +84,21 @@ export class MapContainer extends Component {
 
         let points = [];
 
+        this.props.route.data[0].latitude = "21.05879";
+        this.props.route.data[0].longitude = "52.30261";
+
         for (let i = 0; i < this.props.route.data.length; i++) {
             console.log('i', i);
             points.push({
                 'latitude': this.props.route.data[i].latitude,
-                'longitude': this.props.route.data[i].longitude
+                'longitude': this.props.route.data[i].longitude,
+                'name': this.props.route.data[i].name,
             });
         }
         console.log('ELO ELO 3 2 0, oto punkty');
         console.log(points);
+
+
 
 
         let route = [this.renderStation(this.props.route.data[0].name)];
@@ -140,26 +146,17 @@ export class MapContainer extends Component {
                                         lat: 52.23,
                                         lng: 21.01
                                     }}
-                                    zoom={12}
+                                    zoom={11}
                                 >
-                                    {/*<Marker*/}
-                                    {/*title={'The marker`s title will appear as a tooltip.'}*/}
-                                    {/*name={'SOMA'}*/}
-                                    {/*position={{lat: 52.242, lng: 21.063}}/>*/}
-                                    {/*<Marker*/}
-                                    {/*name={'Dolores park'}*/}
-                                    {/*position={{lat: 52.249, lng: 21.07}}/>*/}
-                                    {/*<Marker/>*/}
                                     {points.map(point => (
-                                            <Marker
-                                                title='The marker`s title will appear as a tooltip.'
-                                                name='SOMA'
-                                                position={'{{'} lat: {point.latitude} lng:  {point.longitude} {'}}'}>
-                                                {/*position={{lat: 52.26, lng: 21.06}}*/}
+                                        <Marker
+                                            title={point.name}
+                                            name={point.name}
+                                            position={{lat: point.longitude, lng: point.latitude}}>
+                                            {/*position={{lat: 52.26, lng: 21.06}}*/}
                                             >
-                                            </Marker>
+                                        </Marker>
                                     ))}
-                                    {/*<Marker position={{lat: 52.24, lng: 21.06}}/>*/}
                                 </Map>
                             </div>
                         </Grid>
