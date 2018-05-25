@@ -31,13 +31,69 @@ export class MapContainer extends Component {
     )
 
 
+    renderMarker = (latitude, longitude) => (
+        <Marker pos={"lat:" + latitude + "," + "lng:" + longitude}>
+        </Marker>
+    )
+
+    renderChildren() {
+        const {children} = this.props;
+
+        if (!children) return;
+
+        return React.Children.map(children, c => {
+            return React.cloneElement(c, {
+                map: this.map,
+                google: this.props.google,
+                mapCenter: this.state.currentLocation
+            });
+        })
+    }
+
+
+    // points = [
+    //     {
+    //         latitude: 52.24,
+    //         longitude: 21.015
+    //     },
+    //     {
+    //         latitude: 52.233,
+    //         longitude: 21.024
+    //     },
+    //     {
+    //         latitude: 52.258,
+    //         longitude: 21.028
+    //     },
+    //     {
+    //         latitude: 52.26,
+    //         longitude: 21.03
+    //     },
+    // ]
+
+
     render() {
+
+
         const style = {
             width: '5em',
             height: '3em'
-        }
+        };
 
         const {classes} = this.props;
+
+
+        let points = [];
+
+        for (let i = 0; i < this.props.route.data.length; i++) {
+            console.log('i', i);
+            points.push({
+                'latitude': this.props.route.data[i].latitude,
+                'longitude': this.props.route.data[i].longitude
+            });
+        }
+        console.log('ELO ELO 3 2 0, oto punkty');
+        console.log(points);
+
 
         let route = [this.renderStation(this.props.route.data[0].name)];
         for (let i = 1; i < this.props.route.data.length; i++) {
@@ -76,17 +132,34 @@ export class MapContainer extends Component {
                         </Grid>
 
                         <Grid item>
-                            <div className={style}>
-                                <Map google={this.props.google} zoom={14}>
-
-                                    <Marker onClick={this.onMarkerClick}
-                                            name={'Current location'}/>
-
-                                    <InfoWindow onClose={this.onInfoWindowClose}>
-                                        <div>
-                                            <h1>Elo elo 3 2 0</h1>
-                                        </div>
-                                    </InfoWindow>
+                            <div>
+                                <Map
+                                    style={{height: '70vh', width: '30vw'}}
+                                    google={this.props.google}
+                                    initialCenter={{
+                                        lat: 52.23,
+                                        lng: 21.01
+                                    }}
+                                    zoom={12}
+                                >
+                                    {/*<Marker*/}
+                                    {/*title={'The marker`s title will appear as a tooltip.'}*/}
+                                    {/*name={'SOMA'}*/}
+                                    {/*position={{lat: 52.242, lng: 21.063}}/>*/}
+                                    {/*<Marker*/}
+                                    {/*name={'Dolores park'}*/}
+                                    {/*position={{lat: 52.249, lng: 21.07}}/>*/}
+                                    {/*<Marker/>*/}
+                                    {points.map(point => (
+                                            <Marker
+                                                title='The marker`s title will appear as a tooltip.'
+                                                name='SOMA'
+                                                position={'{{'} lat: {point.latitude} lng:  {point.longitude} {'}}'}>
+                                                {/*position={{lat: 52.26, lng: 21.06}}*/}
+                                            >
+                                            </Marker>
+                                    ))}
+                                    {/*<Marker position={{lat: 52.24, lng: 21.06}}/>*/}
                                 </Map>
                             </div>
                         </Grid>
@@ -98,6 +171,43 @@ export class MapContainer extends Component {
         );
     }
 }
+
+
+// export class Container extends React.Component {
+//     render() {
+//         const style = {
+//             width: '30vw',
+//             height: '70vh'
+//         }
+//
+//         return (
+{/*<Map*/
+}
+{/*style={{height: '70vh', width: '30vw'}}*/
+}
+{/*google={this.props.google}*/
+}
+{/*initialCenter={{*/
+}
+{/*lat: 52.23,*/
+}
+{/*lng: 21.01*/
+}
+{/*}}*/
+}
+{/*zoom={12}*/
+}
+{/*>*/
+}
+{/*</Map>*/
+}
+//         );
+//     }
+// }
+
+// export default GoogleApiWrapper({
+//     // apiKey: {AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo}
+// })(Container)
 
 export default GoogleApiWrapper({
     // apiKey: (YOUR_GOOGLE_API_KEY_GOES_HERE)
