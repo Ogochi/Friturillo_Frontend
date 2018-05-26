@@ -73,33 +73,77 @@ export class MapContainer extends Component {
 
     render() {
 
-
-        const style = {
-            width: '5em',
-            height: '3em'
-        };
-
-        const {classes} = this.props;
-
-
         let points = [];
+        // misnamed longitude and latitude in backend!!! 2 hours of debugging :(
+        let minLatitude = this.props.route.data[0].longitude, maxLatitude = this.props.route.data[0].longitude,
+            minLongitude = this.props.route.data[0].latitude, maxLongitude = this.props.route.data[0].latitude;
 
-        this.props.route.data[0].latitude = "21.05879";
-        this.props.route.data[0].longitude = "52.30261";
 
         for (let i = 0; i < this.props.route.data.length; i++) {
-            console.log('i', i);
+            // misnamed longitude and latitude in backend!!! 2 hours of debugging :(
             points.push({
-                'latitude': this.props.route.data[i].latitude,
-                'longitude': this.props.route.data[i].longitude,
+                'latitude': this.props.route.data[i].longitude,
+                'longitude': this.props.route.data[i].latitude,
                 'name': this.props.route.data[i].name,
             });
+
+            minLatitude = points[i].latitude < minLatitude ? points[i].latitude : minLatitude;
+            maxLatitude = points[i].latitude > maxLatitude ? points[i].latitude : maxLatitude;
+            minLongitude = points[i].longitude < minLongitude ? points[i].longitude : minLongitude;
+            maxLongitude = points[i].longitude > maxLongitude ? points[i].longitude : maxLongitude;
         }
-        console.log('ELO ELO 3 2 0, oto punkty');
-        console.log(points);
 
+        let pointsBounds = [];
+        pointsBounds.push({
+            'lat': parseFloat(minLatitude),
+            'lng': parseFloat(minLongitude),
+        });
+        pointsBounds.push({
+            'lat': parseFloat(minLatitude),
+            'lng': parseFloat(maxLongitude),
+        });
+        pointsBounds.push({
+            'lat': parseFloat(maxLatitude),
+            'lng': parseFloat(maxLongitude),
+        });
 
+        pointsBounds.push({
+            'lat': parseFloat(maxLatitude),
+            'lng': parseFloat(minLongitude),
+        });
 
+        let bounds = new this.props.google.maps.LatLngBounds();
+        for (let i = 0; i < pointsBounds.length; i++) {
+            bounds.extend(pointsBounds[i]);
+        }
+
+        //TODO parseFloat earlier
+
+        // we have coordinates of "box" - minimal fragment of the map containing all stations
+        // now lets make it a little bigger to pass it as the starting fragment of rendered map
+        //TODO: above for future, because in this module google-maps-react, the bounds property doesn't work, so I only center the map according to min and max coordinates
+        let latitudeDifference = Math.abs(maxLatitude - minLatitude);
+        let longitudeDifference = Math.abs(maxLongitude - minLongitude);
+
+        latitudeDifference = parseFloat(latitudeDifference);
+        longitudeDifference = parseFloat(longitudeDifference);
+
+        let zoom = latitudeDifference < 0.04 ? 13 : 12;
+        console.log("latitudeDifference:", latitudeDifference);
+        console.log("zoom:", zoom);
+
+        minLatitude -= 0.2 * latitudeDifference;
+        maxLatitude += 0.2 * latitudeDifference;
+        minLongitude -= 0.2 * longitudeDifference;
+        maxLongitude += 0.2 * longitudeDifference;
+
+        minLatitude = parseFloat(minLatitude);
+        maxLatitude = parseFloat(maxLatitude);
+        minLongitude = parseFloat(minLongitude);
+        maxLongitude = parseFloat(maxLongitude);
+
+        let latitudeCenter = minLatitude + Math.abs(maxLatitude - minLatitude) / 2;
+        let longitudeCenter = minLongitude + Math.abs(maxLongitude - minLongitude) / 2;
 
         let route = [this.renderStation(this.props.route.data[0].name)];
         for (let i = 1; i < this.props.route.data.length; i++) {
@@ -143,17 +187,17 @@ export class MapContainer extends Component {
                                     style={{height: '70vh', width: '30vw'}}
                                     google={this.props.google}
                                     initialCenter={{
-                                        lat: 52.23,
-                                        lng: 21.01
+                                        lat: latitudeCenter,
+                                        lng: longitudeCenter
                                     }}
-                                    zoom={11}
+                                    // bounds={bounds} // doesn't work :(
+                                    zoom={zoom}
                                 >
                                     {points.map(point => (
                                         <Marker
                                             title={point.name}
                                             name={point.name}
-                                            position={{lat: point.longitude, lng: point.latitude}}>
-                                            {/*position={{lat: 52.26, lng: 21.06}}*/}
+                                            position={{lat: point.latitude, lng: point.longitude}}>
                                             >
                                         </Marker>
                                     ))}
@@ -178,7 +222,8 @@ export class MapContainer extends Component {
 //         }
 //
 //         return (
-{/*<Map*/
+{
+    /*<Map*/
 }
 {/*style={{height: '70vh', width: '30vw'}}*/
 }
