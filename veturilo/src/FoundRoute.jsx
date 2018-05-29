@@ -7,6 +7,7 @@ import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import {Paper} from "material-ui";
+import MediaQuery from 'react-responsive';
 
 export class MapContainer extends Component {
     constructor(props) {
@@ -128,6 +129,7 @@ export class MapContainer extends Component {
         latitudeDifference = parseFloat(latitudeDifference);
         longitudeDifference = parseFloat(longitudeDifference);
 
+        // TODO to jest na razie na przypale zrobione, gdy użyć normalnego javascriptu do gmapsów to normalnie boundsy się ustawi
         let zoom = latitudeDifference < 0.04 ? 13 : 12;
         console.log("latitudeDifference:", latitudeDifference);
         console.log("zoom:", zoom);
@@ -144,6 +146,8 @@ export class MapContainer extends Component {
 
         let latitudeCenter = minLatitude + Math.abs(maxLatitude - minLatitude) / 2;
         let longitudeCenter = minLongitude + Math.abs(maxLongitude - minLongitude) / 2;
+        let latitudeCenterWhenOnMobile = minLatitude + Math.abs(maxLatitude - minLatitude) / 4;
+        let longitudeCenterWhenOnMobile = minLongitude  + (Math.abs(maxLongitude - minLongitude) / 8);
 
         let route = [this.renderStation(this.props.route.data[0].name)];
         for (let i = 1; i < this.props.route.data.length; i++) {
@@ -156,59 +160,116 @@ export class MapContainer extends Component {
 
         let time = Math.round(this.props.route.data.pop().ETA / 60);
         return (
-            <Grid container>
+            <div style={{position: 'relative', top: '0'}}>
 
-                <Grid item>
-                    <Grid container direction="row">
-                        <Grid item>
-                            <Grid
-                                container
-                                alignItems="center"
-                                onClick={this.props.returnToForm}
-                                style={{height: "3em", width: "100%", cursor: "pointer"}}
-                            >
-                                <ChevronLeftIcon style={{marginLeft: "1em"}}/>
+                <MediaQuery maxWidth={600}>
+                    <Paper style={{zIndex: '2', position: 'absolute', width: '90%', top: '3.5em', left: '0', right: '0', margin: '0 auto'}}>
+                        <Grid
+                            container
+                            alignItems="center"
+                            onClick={this.props.returnToForm}
+                            style={{height: "3em", width: "100%", cursor: "pointer"}}
+                        >
+                            <ChevronLeftIcon style={{marginLeft: "1em"}}/>
+                        </Grid>
+                        <Divider/>
+                        <div style={{margin: "1em"}}>
+                            {route}
+                        </div>
+                        <Divider/>
+                        <div style={{margin: "1em"}}>
+                            <Grid container justify="center" alignItems="center">
+                                <Grid item>Pełen czas podróży: {time} minut</Grid>
                             </Grid>
-                            <Divider/>
-                            <div style={{margin: "1em"}}>
-                                {route}
-                            </div>
-                            <Divider/>
-                            <div style={{margin: "1em"}}>
-                                <Grid container justify="center" alignItems="center">
-                                    <Grid item>Pełen czas podróży: {time} minut</Grid>
-                                </Grid>
-                            </div>
-                        </Grid>
+                        </div>
+                    </Paper>
 
-                        <Grid item>
-                            <div>
-                                <Map
-                                    style={{height: '70vh', width: '30vw'}}
-                                    google={this.props.google}
-                                    initialCenter={{
-                                        lat: latitudeCenter,
-                                        lng: longitudeCenter
-                                    }}
-                                    // bounds={bounds} // doesn't work :(
-                                    zoom={zoom}
+                    <Map
+                        style={{height: this.props.height, width: this.props.width, zIndex: '1', position: 'absolute', top: '0', left: '0', bottom: '0'}}
+                        google={this.props.google}
+                        initialCenter={{
+                            lat: latitudeCenterWhenOnMobile,
+                            lng: longitudeCenterWhenOnMobile,
+                        }}
+                        // bounds={bounds} // doesn't work :(
+                        zoom={zoom}
+                    >
+                        {points.map(point => (
+                            <Marker
+                                title={point.name}
+                                name={point.name}
+                                position={{lat: point.latitude, lng: point.longitude}}>
                                 >
-                                    {points.map(point => (
-                                        <Marker
-                                            title={point.name}
-                                            name={point.name}
-                                            position={{lat: point.latitude, lng: point.longitude}}>
-                                            >
-                                        </Marker>
-                                    ))}
-                                </Map>
-                            </div>
+                            </Marker>
+                        ))}
+                    </Map>
+
+                </MediaQuery>
+
+                <MediaQuery minWidth={600}>
+                    <Paper style={{zIndex: '2', position: 'absolute', width: '300px', top: '3.5em', left: '2em', right: '2em'}}>
+                        <Grid
+                            container
+                            alignItems="center"
+                            onClick={this.props.returnToForm}
+                            style={{height: "3em", width: "100%", cursor: "pointer"}}
+                        >
+                            <ChevronLeftIcon style={{marginLeft: "1em"}}/>
                         </Grid>
-                    </Grid>
-                </Grid>
+                        <Divider/>
+                        <div style={{margin: "1em"}}>
+                            {route}
+                        </div>
+                        <Divider/>
+                        <div style={{margin: "1em"}}>
+                            <Grid container justify="center" alignItems="center">
+                                <Grid item>Pełen czas podróży: {time} minut</Grid>
+                            </Grid>
+                        </div>
+                    </Paper>
 
+                    <Map
+                        style={{height: this.props.height, width: this.props.width, zIndex: '1', position: 'absolute', top: '0', left: '0', bottom: '0'}}
+                        google={this.props.google}
+                        initialCenter={{
+                            lat: latitudeCenter,
+                            lng: longitudeCenter
+                        }}
+                        // bounds={bounds} // doesn't work :(
+                        zoom={zoom}
+                    >
+                        {points.map(point => (
+                            <Marker
+                                title={point.name}
+                                name={point.name}
+                                position={{lat: point.latitude, lng: point.longitude}}>
+                                >
+                            </Marker>
+                        ))}
+                    </Map>
+                </MediaQuery>
 
-            </Grid>
+                {/*<Map*/}
+                    {/*style={{height: this.props.height, width: this.props.width, zIndex: '1', position: 'absolute', top: '0', left: '0', bottom: '0'}}*/}
+                    {/*google={this.props.google}*/}
+                    {/*initialCenter={{*/}
+                        {/*lat: latitudeCenter,*/}
+                        {/*lng: longitudeCenter*/}
+                    {/*}}*/}
+                    {/*// bounds={bounds} // doesn't work :(*/}
+                    {/*zoom={zoom}*/}
+                {/*>*/}
+                    {/*{points.map(point => (*/}
+                        {/*<Marker*/}
+                            {/*title={point.name}*/}
+                            {/*name={point.name}*/}
+                            {/*position={{lat: point.latitude, lng: point.longitude}}>*/}
+                            {/*>*/}
+                        {/*</Marker>*/}
+                    {/*))}*/}
+                {/*</Map>*/}
+
+            </div>
         );
     }
 }
