@@ -1,15 +1,19 @@
-import React, {Component} from 'react';
+/*global google*/
+
+import React from "react"
+import {compose, withProps, lifecycle} from "recompose"
+import {withScriptjs, withGoogleMap, GoogleMap, Marker, DirectionsRenderer} from "react-google-maps"
 import PropTypes from 'prop-types';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import LocationIcon from 'material-ui-icons/LocationOn';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
-import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import {Paper} from "material-ui";
 import MediaQuery from 'react-responsive';
 
-export class MapContainer extends Component {
+// export class MapContainer extends Component {
+class MyFancyComponent extends React.PureComponent {
     constructor(props) {
         super(props);
 
@@ -23,54 +27,13 @@ export class MapContainer extends Component {
             <LocationIcon style={{marginRight: "1em"}}/>
             <span>{name}</span>
         </Grid>
-    )
+    );
 
     renderCaption = text => (
         <Typography variant="caption" align="center" key={text + "text"}>
             {text}
         </Typography>
-    )
-
-
-    renderMarker = (latitude, longitude) => (
-        <Marker pos={"lat:" + latitude + "," + "lng:" + longitude}>
-        </Marker>
-    )
-
-    renderChildren() {
-        const {children} = this.props;
-
-        if (!children) return;
-
-        return React.Children.map(children, c => {
-            return React.cloneElement(c, {
-                map: this.map,
-                google: this.props.google,
-                mapCenter: this.state.currentLocation
-            });
-        })
-    }
-
-
-    // points = [
-    //     {
-    //         latitude: 52.24,
-    //         longitude: 21.015
-    //     },
-    //     {
-    //         latitude: 52.233,
-    //         longitude: 21.024
-    //     },
-    //     {
-    //         latitude: 52.258,
-    //         longitude: 21.028
-    //     },
-    //     {
-    //         latitude: 52.26,
-    //         longitude: 21.03
-    //     },
-    // ]
-
+    );
 
     render() {
 
@@ -78,7 +41,6 @@ export class MapContainer extends Component {
         // misnamed longitude and latitude in backend!!! 2 hours of debugging :(
         let minLatitude = this.props.route.data[0].longitude, maxLatitude = this.props.route.data[0].longitude,
             minLongitude = this.props.route.data[0].latitude, maxLongitude = this.props.route.data[0].latitude;
-
 
         for (let i = 0; i < this.props.route.data.length; i++) {
             // misnamed longitude and latitude in backend!!! 2 hours of debugging :(
@@ -92,30 +54,6 @@ export class MapContainer extends Component {
             maxLatitude = points[i].latitude > maxLatitude ? points[i].latitude : maxLatitude;
             minLongitude = points[i].longitude < minLongitude ? points[i].longitude : minLongitude;
             maxLongitude = points[i].longitude > maxLongitude ? points[i].longitude : maxLongitude;
-        }
-
-        let pointsBounds = [];
-        pointsBounds.push({
-            'lat': parseFloat(minLatitude),
-            'lng': parseFloat(minLongitude),
-        });
-        pointsBounds.push({
-            'lat': parseFloat(minLatitude),
-            'lng': parseFloat(maxLongitude),
-        });
-        pointsBounds.push({
-            'lat': parseFloat(maxLatitude),
-            'lng': parseFloat(maxLongitude),
-        });
-
-        pointsBounds.push({
-            'lat': parseFloat(maxLatitude),
-            'lng': parseFloat(minLongitude),
-        });
-
-        let bounds = new this.props.google.maps.LatLngBounds();
-        for (let i = 0; i < pointsBounds.length; i++) {
-            bounds.extend(pointsBounds[i]);
         }
 
         //TODO parseFloat earlier
@@ -147,7 +85,7 @@ export class MapContainer extends Component {
         let latitudeCenter = minLatitude + Math.abs(maxLatitude - minLatitude) / 2;
         let longitudeCenter = minLongitude + Math.abs(maxLongitude - minLongitude) / 2;
         let latitudeCenterWhenOnMobile = minLatitude + Math.abs(maxLatitude - minLatitude) / 4;
-        let longitudeCenterWhenOnMobile = minLongitude  + (Math.abs(maxLongitude - minLongitude) / 8);
+        let longitudeCenterWhenOnMobile = minLongitude + (Math.abs(maxLongitude - minLongitude) / 8);
 
         let route = [this.renderStation(this.props.route.data[0].name)];
         for (let i = 1; i < this.props.route.data.length; i++) {
@@ -159,11 +97,66 @@ export class MapContainer extends Component {
         }
 
         let time = Math.round(this.props.route.data.pop().ETA / 60);
+
+
+        const MapWithADirectionsRenderer = compose(
+            withProps({
+                googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places",
+                loadingElement: <div style={{height: `100%`}}/>,
+                containerElement: <div style={{height: `100%`}}/>,
+                mapElement: <div style={{zIndex: '1', height: `100%`}}/>,
+            }),
+            withScriptjs,
+            withGoogleMap,
+            lifecycle({
+                componentDidMount() {
+                    const DirectionsService = new google.maps.DirectionsService();
+
+                    let myWaypoints = [];
+                    for (let i = 1; i < points.length - 1; i++) {
+                        myWaypoints.push({location: new google.maps.LatLng(points[i].latitude, points[i].longitude)})
+                    }
+
+                    DirectionsService.route({
+                        // origin: new google.maps.LatLng(points[0].latitude, points[0].longitude),
+                        origin: new google.maps.LatLng(points[0].latitude, points[0].longitude),
+                        destination: new google.maps.LatLng(points[points.length - 1].latitude, points[points.length - 1].longitude),
+                        travelMode: google.maps.TravelMode.BICYCLING,
+                        waypoints: myWaypoints
+                    }, (result, status) => {
+                        if (status === google.maps.DirectionsStatus.OK) {
+                            this.setState({
+                                directions: result,
+                            });
+                        } else {
+                            console.error(`error fetching directions ${result}`);
+                        }
+                    });
+                }
+            })
+        )(props =>
+            <GoogleMap
+                defaultZoom={11}
+                defaultCenter={new google.maps.LatLng(latitudeCenter, longitudeCenter)}
+            >
+                {props.directions && <DirectionsRenderer directions={props.directions}/>}
+            </GoogleMap>
+        );
+
+
         return (
-            <div style={{position: 'relative', top: '0'}}>
+            <div style={{position: 'absolute', width: '100%', height: '100%'}}>
 
                 <MediaQuery maxWidth={600}>
-                    <Paper style={{zIndex: '2', position: 'absolute', width: '90%', top: '3.5em', left: '0', right: '0', margin: '0 auto'}}>
+                    <Paper style={{
+                        zIndex: '2',
+                        position: 'absolute',
+                        width: '90%',
+                        top: '3.5em',
+                        left: '0',
+                        right: '0',
+                        margin: '0 auto'
+                    }}>
                         <Grid
                             container
                             alignItems="center"
@@ -184,30 +177,19 @@ export class MapContainer extends Component {
                         </div>
                     </Paper>
 
-                    <Map
-                        style={{height: this.props.height, width: this.props.width, zIndex: '1', position: 'absolute', top: '0', left: '0', bottom: '0'}}
-                        google={this.props.google}
-                        initialCenter={{
-                            lat: latitudeCenterWhenOnMobile,
-                            lng: longitudeCenterWhenOnMobile,
-                        }}
-                        // bounds={bounds} // doesn't work :(
-                        zoom={zoom}
-                    >
-                        {points.map(point => (
-                            <Marker
-                                title={point.name}
-                                name={point.name}
-                                position={{lat: point.latitude, lng: point.longitude}}>
-                                >
-                            </Marker>
-                        ))}
-                    </Map>
+                    <MapWithADirectionsRenderer/>
 
                 </MediaQuery>
 
                 <MediaQuery minWidth={600}>
-                    <Paper style={{zIndex: '2', position: 'absolute', width: '300px', top: '3.5em', left: '2em', right: '2em'}}>
+                    <Paper style={{
+                        zIndex: '2',
+                        position: 'absolute',
+                        width: '300px',
+                        top: '3.5em',
+                        left: '2em',
+                        right: '2em'
+                    }}>
                         <Grid
                             container
                             alignItems="center"
@@ -228,90 +210,13 @@ export class MapContainer extends Component {
                         </div>
                     </Paper>
 
-                    <Map
-                        style={{height: this.props.height, width: this.props.width, zIndex: '1', position: 'absolute', top: '0', left: '0', bottom: '0'}}
-                        google={this.props.google}
-                        initialCenter={{
-                            lat: latitudeCenter,
-                            lng: longitudeCenter
-                        }}
-                        // bounds={bounds} // doesn't work :(
-                        zoom={zoom}
-                    >
-                        {points.map(point => (
-                            <Marker
-                                title={point.name}
-                                name={point.name}
-                                position={{lat: point.latitude, lng: point.longitude}}>
-                                >
-                            </Marker>
-                        ))}
-                    </Map>
+                    <MapWithADirectionsRenderer/>
+
                 </MediaQuery>
-
-                {/*<Map*/}
-                    {/*style={{height: this.props.height, width: this.props.width, zIndex: '1', position: 'absolute', top: '0', left: '0', bottom: '0'}}*/}
-                    {/*google={this.props.google}*/}
-                    {/*initialCenter={{*/}
-                        {/*lat: latitudeCenter,*/}
-                        {/*lng: longitudeCenter*/}
-                    {/*}}*/}
-                    {/*// bounds={bounds} // doesn't work :(*/}
-                    {/*zoom={zoom}*/}
-                {/*>*/}
-                    {/*{points.map(point => (*/}
-                        {/*<Marker*/}
-                            {/*title={point.name}*/}
-                            {/*name={point.name}*/}
-                            {/*position={{lat: point.latitude, lng: point.longitude}}>*/}
-                            {/*>*/}
-                        {/*</Marker>*/}
-                    {/*))}*/}
-                {/*</Map>*/}
-
             </div>
-        );
+        )
+
     }
 }
 
-
-// export class Container extends React.Component {
-//     render() {
-//         const style = {
-//             width: '30vw',
-//             height: '70vh'
-//         }
-//
-//         return (
-{
-    /*<Map*/
-}
-{/*style={{height: '70vh', width: '30vw'}}*/
-}
-{/*google={this.props.google}*/
-}
-{/*initialCenter={{*/
-}
-{/*lat: 52.23,*/
-}
-{/*lng: 21.01*/
-}
-{/*}}*/
-}
-{/*zoom={12}*/
-}
-{/*>*/
-}
-{/*</Map>*/
-}
-//         );
-//     }
-// }
-
-// export default GoogleApiWrapper({
-//     // apiKey: {AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo}
-// })(Container)
-
-export default GoogleApiWrapper({
-    // apiKey: (YOUR_GOOGLE_API_KEY_GOES_HERE)
-})(MapContainer)
+export default MyFancyComponent;
