@@ -141,7 +141,6 @@ class App extends Component {
 
     render() {
         const {classes} = this.props;
-        console.log("state height: ", this.state.height);
         return (
             <div style={{backgroundImage: "url('map.jpg')", height: this.state.height, position: 'relative'}}>
                 <Grid container direction="row" alignItems="center" justify="center" style={{position: 'absolute'}}>
@@ -182,9 +181,6 @@ class App extends Component {
                                 <Spinner fadeIn="none" className={classes.spinner} color="blue" name="folding-cube"/>
                                 }
                             </Grid>
-                            {/*{this.state.formState === "result" &&*/}
-                            {/*<FoundRoute returnToForm={this.changeFormState("form")} route={this.state.route}/>*/}
-                            {/*}*/}
                         </Paper>
                     </Grid>
                 </Grid>

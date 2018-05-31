@@ -2,8 +2,7 @@
 
 import React from "react"
 import {compose, withProps, withHandlers, lifecycle} from "recompose"
-import {withScriptjs, withGoogleMap, GoogleMap, Marker, DirectionsRenderer} from "react-google-maps"
-import PropTypes from 'prop-types';
+import {withScriptjs, withGoogleMap, GoogleMap, DirectionsRenderer} from "react-google-maps"
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import LocationIcon from 'material-ui-icons/LocationOn';
 import Divider from 'material-ui/Divider';
@@ -12,8 +11,7 @@ import Typography from 'material-ui/Typography';
 import {Paper} from "material-ui";
 import MediaQuery from 'react-responsive';
 
-// export class MapContainer extends Component {
-class MyFancyComponent extends React.PureComponent {
+class MapWithRoute extends React.PureComponent {
     constructor(props) {
         super(props);
 
@@ -56,21 +54,14 @@ class MyFancyComponent extends React.PureComponent {
             maxLongitude = points[i].longitude > maxLongitude ? points[i].longitude : maxLongitude;
         }
 
-        //TODO parseFloat earlier
 
         // we have coordinates of "box" - minimal fragment of the map containing all stations
         // now lets make it a little bigger to pass it as the starting fragment of rendered map
-        //TODO: above for future, because in this module google-maps-react, the bounds property doesn't work, so I only center the map according to min and max coordinates
         let latitudeDifference = Math.abs(maxLatitude - minLatitude);
         let longitudeDifference = Math.abs(maxLongitude - minLongitude);
 
         latitudeDifference = parseFloat(latitudeDifference);
         longitudeDifference = parseFloat(longitudeDifference);
-
-        // TODO to jest na razie na przypale zrobione, gdy użyć normalnego javascriptu do gmapsów to normalnie boundsy się ustawi
-        let zoom = latitudeDifference < 0.04 ? 13 : 12;
-        console.log("latitudeDifference:", latitudeDifference);
-        console.log("zoom:", zoom);
 
         minLatitude -= 0.2 * latitudeDifference;
         maxLatitude += 0.2 * latitudeDifference;
@@ -100,11 +91,6 @@ class MyFancyComponent extends React.PureComponent {
 
 
         const bounds = new window.google.maps.LatLngBounds();
-        // map.props.children.forEach((child) => {
-        //     if (child.type === Marker) {
-        //         bounds.extend(new window.google.maps.LatLng(child.props.position.lat, child.props.position.lng));
-        //     }
-        // })
         bounds.extend(new window.google.maps.LatLng(minLatitude, minLongitude));
         bounds.extend(new window.google.maps.LatLng(minLatitude, maxLongitude));
         bounds.extend(new window.google.maps.LatLng(maxLatitude, minLongitude));
@@ -143,47 +129,10 @@ class MyFancyComponent extends React.PureComponent {
                             console.error(`error fetching directions ${result}`);
                         }
                     });
-
-                    // const bounds = new window.google.maps.LatLngBounds();
-                    // // // this.props.hotels.map((hotel, i) => {
-                    // // //     bounds.extend(new window.google.maps.LatLng(
-                    // // //         hotel.attributes.location.lat,
-                    // // //         hotel.attributes.location.lng
-                    // // //     ));
-                    // // // });
-                    // bounds.extend(new window.google.maps.LatLng(minLatitude, minLongitude));
-                    // bounds.extend(new window.google.maps.LatLng(minLatitude, maxLongitude));
-                    // bounds.extend(new window.google.maps.LatLng(maxLatitude, minLongitude));
-                    // bounds.extend(new window.google.maps.LatLng(maxLatitude, maxLongitude));
-                    // this.refs.map.fitBounds(bounds)
                 },
-
-                componentWillMount() {
-
-                    this.setState({
-
-                        zoomToMarkers: map => {
-                            //console.log("Zoom to markers");
-                            const bounds = new window.google.maps.LatLngBounds();
-                            // map.props.children.forEach((child) => {
-                            //     if (child.type === Marker) {
-                            //         bounds.extend(new window.google.maps.LatLng(child.props.position.lat, child.props.position.lng));
-                            //     }
-                            // })
-                            bounds.extend(new window.google.maps.LatLng(minLatitude, minLongitude));
-                            bounds.extend(new window.google.maps.LatLng(minLatitude, maxLongitude));
-                            bounds.extend(new window.google.maps.LatLng(maxLatitude, minLongitude));
-                            bounds.extend(new window.google.maps.LatLng(maxLatitude, maxLongitude));
-                            map.fitBounds(bounds);
-                        }
-                    })
-                },
-
-
             })
         )(props =>
             <GoogleMap
-                // ref={props.zoomToMarkers}
                 defaultZoom={13}
                 defaultCenter={new google.maps.LatLng(latitudeCenter, longitudeCenter)}
             >
@@ -268,4 +217,4 @@ class MyFancyComponent extends React.PureComponent {
     }
 }
 
-export default MyFancyComponent;
+export default MapWithRoute;
