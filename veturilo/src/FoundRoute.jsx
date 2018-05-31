@@ -1,7 +1,7 @@
 /*global google*/
 
 import React from "react"
-import {compose, withProps, lifecycle} from "recompose"
+import {compose, withProps, withHandlers, lifecycle} from "recompose"
 import {withScriptjs, withGoogleMap, GoogleMap, Marker, DirectionsRenderer} from "react-google-maps"
 import PropTypes from 'prop-types';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
@@ -99,6 +99,17 @@ class MyFancyComponent extends React.PureComponent {
         let time = Math.round(this.props.route.data.pop().ETA / 60);
 
 
+        const bounds = new window.google.maps.LatLngBounds();
+        // map.props.children.forEach((child) => {
+        //     if (child.type === Marker) {
+        //         bounds.extend(new window.google.maps.LatLng(child.props.position.lat, child.props.position.lng));
+        //     }
+        // })
+        bounds.extend(new window.google.maps.LatLng(minLatitude, minLongitude));
+        bounds.extend(new window.google.maps.LatLng(minLatitude, maxLongitude));
+        bounds.extend(new window.google.maps.LatLng(maxLatitude, minLongitude));
+        bounds.extend(new window.google.maps.LatLng(maxLatitude, maxLongitude));
+
         const MapWithADirectionsRenderer = compose(
             withProps({
                 googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places",
@@ -132,11 +143,48 @@ class MyFancyComponent extends React.PureComponent {
                             console.error(`error fetching directions ${result}`);
                         }
                     });
-                }
+
+                    // const bounds = new window.google.maps.LatLngBounds();
+                    // // // this.props.hotels.map((hotel, i) => {
+                    // // //     bounds.extend(new window.google.maps.LatLng(
+                    // // //         hotel.attributes.location.lat,
+                    // // //         hotel.attributes.location.lng
+                    // // //     ));
+                    // // // });
+                    // bounds.extend(new window.google.maps.LatLng(minLatitude, minLongitude));
+                    // bounds.extend(new window.google.maps.LatLng(minLatitude, maxLongitude));
+                    // bounds.extend(new window.google.maps.LatLng(maxLatitude, minLongitude));
+                    // bounds.extend(new window.google.maps.LatLng(maxLatitude, maxLongitude));
+                    // this.refs.map.fitBounds(bounds)
+                },
+
+                componentWillMount() {
+
+                    this.setState({
+
+                        zoomToMarkers: map => {
+                            //console.log("Zoom to markers");
+                            const bounds = new window.google.maps.LatLngBounds();
+                            // map.props.children.forEach((child) => {
+                            //     if (child.type === Marker) {
+                            //         bounds.extend(new window.google.maps.LatLng(child.props.position.lat, child.props.position.lng));
+                            //     }
+                            // })
+                            bounds.extend(new window.google.maps.LatLng(minLatitude, minLongitude));
+                            bounds.extend(new window.google.maps.LatLng(minLatitude, maxLongitude));
+                            bounds.extend(new window.google.maps.LatLng(maxLatitude, minLongitude));
+                            bounds.extend(new window.google.maps.LatLng(maxLatitude, maxLongitude));
+                            map.fitBounds(bounds);
+                        }
+                    })
+                },
+
+
             })
         )(props =>
             <GoogleMap
-                defaultZoom={11}
+                // ref={props.zoomToMarkers}
+                defaultZoom={13}
                 defaultCenter={new google.maps.LatLng(latitudeCenter, longitudeCenter)}
             >
                 {props.directions && <DirectionsRenderer directions={props.directions}/>}
@@ -210,7 +258,8 @@ class MyFancyComponent extends React.PureComponent {
                         </div>
                     </Paper>
 
-                    <MapWithADirectionsRenderer/>
+                    <MapWithADirectionsRenderer ref={map => map && map.fitBounds(bounds)}
+                    />
 
                 </MediaQuery>
             </div>
