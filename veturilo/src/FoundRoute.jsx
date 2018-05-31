@@ -1,7 +1,7 @@
 /*global google*/
 
 import React from "react"
-import {compose, withProps, withHandlers, lifecycle} from "recompose"
+import {compose, withProps, lifecycle} from "recompose"
 import {withScriptjs, withGoogleMap, GoogleMap, DirectionsRenderer} from "react-google-maps"
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import LocationIcon from 'material-ui-icons/LocationOn';
@@ -75,8 +75,6 @@ class MapWithRoute extends React.PureComponent {
 
         let latitudeCenter = minLatitude + Math.abs(maxLatitude - minLatitude) / 2;
         let longitudeCenter = minLongitude + Math.abs(maxLongitude - minLongitude) / 2;
-        let latitudeCenterWhenOnMobile = minLatitude + Math.abs(maxLatitude - minLatitude) / 4;
-        let longitudeCenterWhenOnMobile = minLongitude + (Math.abs(maxLongitude - minLongitude) / 8);
 
         let route = [this.renderStation(this.props.route.data[0].name)];
         for (let i = 1; i < this.props.route.data.length; i++) {
@@ -144,7 +142,7 @@ class MapWithRoute extends React.PureComponent {
         return (
             <div style={{position: 'absolute', width: '100%', height: '100%'}}>
 
-                <MediaQuery maxWidth={600}>
+                <MediaQuery key="small" maxWidth={600}>
                     <Paper style={{
                         zIndex: '2',
                         position: 'absolute',
@@ -174,11 +172,9 @@ class MapWithRoute extends React.PureComponent {
                         </div>
                     </Paper>
 
-                    <MapWithADirectionsRenderer/>
-
                 </MediaQuery>
 
-                <MediaQuery minWidth={600}>
+                <MediaQuery key="big" minWidth={600}>
                     <Paper style={{
                         zIndex: '2',
                         position: 'absolute',
@@ -207,10 +203,10 @@ class MapWithRoute extends React.PureComponent {
                         </div>
                     </Paper>
 
-                    <MapWithADirectionsRenderer ref={map => map && map.fitBounds(bounds)}
-                    />
-
                 </MediaQuery>
+
+                <MapWithADirectionsRenderer ref={map => map && map.fitBounds(bounds)}
+                />
             </div>
         )
 
