@@ -1,14 +1,17 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+/*global google*/
+
+import React from "react"
+import {compose, withProps, lifecycle} from "recompose"
+import {withScriptjs, withGoogleMap, GoogleMap, DirectionsRenderer} from "react-google-maps"
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import LocationIcon from 'material-ui-icons/LocationOn';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
-import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 import {Paper} from "material-ui";
+import MediaQuery from 'react-responsive';
 
-export class MapContainer extends Component {
+class MapWithRoute extends React.PureComponent {
     constructor(props) {
         super(props);
 
@@ -22,54 +25,13 @@ export class MapContainer extends Component {
             <LocationIcon style={{marginRight: "1em"}}/>
             <span>{name}</span>
         </Grid>
-    )
+    );
 
     renderCaption = text => (
         <Typography variant="caption" align="center" key={text + "text"}>
             {text}
         </Typography>
-    )
-
-
-    renderMarker = (latitude, longitude) => (
-        <Marker pos={"lat:" + latitude + "," + "lng:" + longitude}>
-        </Marker>
-    )
-
-    renderChildren() {
-        const {children} = this.props;
-
-        if (!children) return;
-
-        return React.Children.map(children, c => {
-            return React.cloneElement(c, {
-                map: this.map,
-                google: this.props.google,
-                mapCenter: this.state.currentLocation
-            });
-        })
-    }
-
-
-    // points = [
-    //     {
-    //         latitude: 52.24,
-    //         longitude: 21.015
-    //     },
-    //     {
-    //         latitude: 52.233,
-    //         longitude: 21.024
-    //     },
-    //     {
-    //         latitude: 52.258,
-    //         longitude: 21.028
-    //     },
-    //     {
-    //         latitude: 52.26,
-    //         longitude: 21.03
-    //     },
-    // ]
-
+    );
 
     render() {
 
@@ -77,7 +39,6 @@ export class MapContainer extends Component {
         // misnamed longitude and latitude in backend!!! 2 hours of debugging :(
         let minLatitude = this.props.route.data[0].longitude, maxLatitude = this.props.route.data[0].longitude,
             minLongitude = this.props.route.data[0].latitude, maxLongitude = this.props.route.data[0].latitude;
-
 
         for (let i = 0; i < this.props.route.data.length; i++) {
             // misnamed longitude and latitude in backend!!! 2 hours of debugging :(
@@ -93,44 +54,14 @@ export class MapContainer extends Component {
             maxLongitude = points[i].longitude > maxLongitude ? points[i].longitude : maxLongitude;
         }
 
-        let pointsBounds = [];
-        pointsBounds.push({
-            'lat': parseFloat(minLatitude),
-            'lng': parseFloat(minLongitude),
-        });
-        pointsBounds.push({
-            'lat': parseFloat(minLatitude),
-            'lng': parseFloat(maxLongitude),
-        });
-        pointsBounds.push({
-            'lat': parseFloat(maxLatitude),
-            'lng': parseFloat(maxLongitude),
-        });
-
-        pointsBounds.push({
-            'lat': parseFloat(maxLatitude),
-            'lng': parseFloat(minLongitude),
-        });
-
-        let bounds = new this.props.google.maps.LatLngBounds();
-        for (let i = 0; i < pointsBounds.length; i++) {
-            bounds.extend(pointsBounds[i]);
-        }
-
-        //TODO parseFloat earlier
 
         // we have coordinates of "box" - minimal fragment of the map containing all stations
         // now lets make it a little bigger to pass it as the starting fragment of rendered map
-        //TODO: above for future, because in this module google-maps-react, the bounds property doesn't work, so I only center the map according to min and max coordinates
         let latitudeDifference = Math.abs(maxLatitude - minLatitude);
         let longitudeDifference = Math.abs(maxLongitude - minLongitude);
 
         latitudeDifference = parseFloat(latitudeDifference);
         longitudeDifference = parseFloat(longitudeDifference);
-
-        let zoom = latitudeDifference < 0.04 ? 13 : 12;
-        console.log("latitudeDifference:", latitudeDifference);
-        console.log("zoom:", zoom);
 
         minLatitude -= 0.2 * latitudeDifference;
         maxLatitude += 0.2 * latitudeDifference;
@@ -155,102 +86,131 @@ export class MapContainer extends Component {
         }
 
         let time = Math.round(this.props.route.data.pop().ETA / 60);
-        return (
-            <Grid container>
-
-                <Grid item>
-                    <Grid container direction="row">
-                        <Grid item>
-                            <Grid
-                                container
-                                alignItems="center"
-                                onClick={this.props.returnToForm}
-                                style={{height: "3em", width: "100%", cursor: "pointer"}}
-                            >
-                                <ChevronLeftIcon style={{marginLeft: "1em"}}/>
-                            </Grid>
-                            <Divider/>
-                            <div style={{margin: "1em"}}>
-                                {route}
-                            </div>
-                            <Divider/>
-                            <div style={{margin: "1em"}}>
-                                <Grid container justify="center" alignItems="center">
-                                    <Grid item>Pełen czas podróży: {time} minut</Grid>
-                                </Grid>
-                            </div>
-                        </Grid>
-
-                        <Grid item>
-                            <div>
-                                <Map
-                                    style={{height: '70vh', width: '30vw'}}
-                                    google={this.props.google}
-                                    initialCenter={{
-                                        lat: latitudeCenter,
-                                        lng: longitudeCenter
-                                    }}
-                                    // bounds={bounds} // doesn't work :(
-                                    zoom={zoom}
-                                >
-                                    {points.map(point => (
-                                        <Marker
-                                            title={point.name}
-                                            name={point.name}
-                                            position={{lat: point.latitude, lng: point.longitude}}>
-                                            >
-                                        </Marker>
-                                    ))}
-                                </Map>
-                            </div>
-                        </Grid>
-                    </Grid>
-                </Grid>
 
 
-            </Grid>
+        const bounds = new window.google.maps.LatLngBounds();
+        bounds.extend(new window.google.maps.LatLng(minLatitude, minLongitude));
+        bounds.extend(new window.google.maps.LatLng(minLatitude, maxLongitude));
+        bounds.extend(new window.google.maps.LatLng(maxLatitude, minLongitude));
+        bounds.extend(new window.google.maps.LatLng(maxLatitude, maxLongitude));
+
+        const MapWithADirectionsRenderer = compose(
+            withProps({
+                googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places",
+                loadingElement: <div style={{height: `100%`}}/>,
+                containerElement: <div style={{height: `100%`}}/>,
+                mapElement: <div style={{zIndex: '1', height: `100%`}}/>,
+            }),
+            withScriptjs,
+            withGoogleMap,
+            lifecycle({
+                componentDidMount() {
+                    const DirectionsService = new google.maps.DirectionsService();
+
+                    let myWaypoints = [];
+                    for (let i = 1; i < points.length - 1; i++) {
+                        myWaypoints.push({location: new google.maps.LatLng(points[i].latitude, points[i].longitude)})
+                    }
+
+                    DirectionsService.route({
+                        // origin: new google.maps.LatLng(points[0].latitude, points[0].longitude),
+                        origin: new google.maps.LatLng(points[0].latitude, points[0].longitude),
+                        destination: new google.maps.LatLng(points[points.length - 1].latitude, points[points.length - 1].longitude),
+                        travelMode: google.maps.TravelMode.BICYCLING,
+                        waypoints: myWaypoints
+                    }, (result, status) => {
+                        if (status === google.maps.DirectionsStatus.OK) {
+                            this.setState({
+                                directions: result,
+                            });
+                        } else {
+                            console.error(`error fetching directions ${result}`);
+                        }
+                    });
+                },
+            })
+        )(props =>
+            <GoogleMap
+                defaultZoom={13}
+                defaultCenter={new google.maps.LatLng(latitudeCenter, longitudeCenter)}
+            >
+                {props.directions && <DirectionsRenderer directions={props.directions}/>}
+            </GoogleMap>
         );
+
+
+        return (
+            <div style={{position: 'absolute', width: '100%', height: '100%'}}>
+
+                <MediaQuery key="small" maxWidth={600}>
+                    <Paper style={{
+                        zIndex: '2',
+                        position: 'absolute',
+                        width: '90%',
+                        top: '3.5em',
+                        left: '0',
+                        right: '0',
+                        margin: '0 auto'
+                    }}>
+                        <Grid
+                            container
+                            alignItems="center"
+                            onClick={this.props.returnToForm}
+                            style={{height: "3em", width: "100%", cursor: "pointer"}}
+                        >
+                            <ChevronLeftIcon style={{marginLeft: "1em"}}/>
+                        </Grid>
+                        <Divider/>
+                        <div style={{margin: "1em"}}>
+                            {route}
+                        </div>
+                        <Divider/>
+                        <div style={{margin: "1em"}}>
+                            <Grid container justify="center" alignItems="center">
+                                <Grid item>Pełen czas podróży: {time} minut</Grid>
+                            </Grid>
+                        </div>
+                    </Paper>
+
+                </MediaQuery>
+
+                <MediaQuery key="big" minWidth={600}>
+                    <Paper style={{
+                        zIndex: '2',
+                        position: 'absolute',
+                        width: '300px',
+                        top: '3.5em',
+                        left: '2em',
+                        right: '2em'
+                    }}>
+                        <Grid
+                            container
+                            alignItems="center"
+                            onClick={this.props.returnToForm}
+                            style={{height: "3em", width: "100%", cursor: "pointer"}}
+                        >
+                            <ChevronLeftIcon style={{marginLeft: "1em"}}/>
+                        </Grid>
+                        <Divider/>
+                        <div style={{margin: "1em"}}>
+                            {route}
+                        </div>
+                        <Divider/>
+                        <div style={{margin: "1em"}}>
+                            <Grid container justify="center" alignItems="center">
+                                <Grid item>Pełen czas podróży: {time} minut</Grid>
+                            </Grid>
+                        </div>
+                    </Paper>
+
+                </MediaQuery>
+
+                <MapWithADirectionsRenderer ref={map => map && map.fitBounds(bounds)}
+                />
+            </div>
+        )
+
     }
 }
 
-
-// export class Container extends React.Component {
-//     render() {
-//         const style = {
-//             width: '30vw',
-//             height: '70vh'
-//         }
-//
-//         return (
-{
-    /*<Map*/
-}
-{/*style={{height: '70vh', width: '30vw'}}*/
-}
-{/*google={this.props.google}*/
-}
-{/*initialCenter={{*/
-}
-{/*lat: 52.23,*/
-}
-{/*lng: 21.01*/
-}
-{/*}}*/
-}
-{/*zoom={12}*/
-}
-{/*>*/
-}
-{/*</Map>*/
-}
-//         );
-//     }
-// }
-
-// export default GoogleApiWrapper({
-//     // apiKey: {AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo}
-// })(Container)
-
-export default GoogleApiWrapper({
-    // apiKey: (YOUR_GOOGLE_API_KEY_GOES_HERE)
-})(MapContainer)
+export default MapWithRoute;
