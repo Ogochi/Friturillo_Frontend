@@ -4,6 +4,8 @@ import React from "react"
 import {compose, withProps, lifecycle} from "recompose"
 import {withScriptjs, withGoogleMap, GoogleMap, DirectionsRenderer} from "react-google-maps"
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import ExpandLessIcon from 'material-ui-icons/ExpandLess';
 import LocationIcon from 'material-ui-icons/LocationOn';
 import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
@@ -17,6 +19,8 @@ class MapWithRoute extends React.PureComponent {
 
         this.state = {
             steps: [],
+            detailsVisible: true,
+            mapNotSet: true,
         };
     }
 
@@ -27,11 +31,13 @@ class MapWithRoute extends React.PureComponent {
         </Grid>
     );
 
-    renderCaption = text => (
-        <Typography variant="caption" align="center" key={text + "text"}>
+    renderCaption = (text, i) => (
+        <Typography variant="caption" align="center" key={text + "text" + i}>
             {text}
         </Typography>
     );
+
+    toggleDetails = () => this.setState(prev => ({ detailsVisible: !prev.detailsVisible }))
 
     render() {
 
@@ -80,12 +86,12 @@ class MapWithRoute extends React.PureComponent {
         for (let i = 1; i < this.props.route.data.length; i++) {
             let timeBetween = this.props.route.data[i].ETA - this.props.route.data[i - 1].ETA;
             let distanceBetween = this.props.route.data[i].length - this.props.route.data[i - 1].length;
-            route.push(this.renderCaption(`Czas pomiędzy: ${Math.round(timeBetween / 60)} minut`));
-            route.push(this.renderCaption(`Odległość pomiędzy: ${Math.round(distanceBetween / 1000)} km`));
+            route.push(this.renderCaption(`Czas pomiędzy: ${Math.round(timeBetween / 60)} minut`, i));
+            route.push(this.renderCaption(`Odległość pomiędzy: ${Math.round(distanceBetween / 1000)} km`, i));
             route.push(this.renderStation(this.props.route.data[i].name));
         }
 
-        let time = Math.round(this.props.route.data.pop().ETA / 60);
+        let time = Math.round(this.props.route.data[this.props.route.data.length - 1].ETA / 60);
 
 
         const bounds = new window.google.maps.LatLngBounds();
@@ -94,50 +100,53 @@ class MapWithRoute extends React.PureComponent {
         bounds.extend(new window.google.maps.LatLng(maxLatitude, minLongitude));
         bounds.extend(new window.google.maps.LatLng(maxLatitude, maxLongitude));
 
-        const MapWithADirectionsRenderer = compose(
-            withProps({
-                googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places",
-                loadingElement: <div style={{height: `100%`}}/>,
-                containerElement: <div style={{height: `100%`}}/>,
-                mapElement: <div style={{zIndex: '1', height: `100%`}}/>,
-            }),
-            withScriptjs,
-            withGoogleMap,
-            lifecycle({
-                componentDidMount() {
-                    const DirectionsService = new google.maps.DirectionsService();
+        if (this.state.mapNotSet) {
+          this.setState({mapNotSet: false});
 
-                    let myWaypoints = [];
-                    for (let i = 1; i < points.length - 1; i++) {
-                        myWaypoints.push({location: new google.maps.LatLng(points[i].latitude, points[i].longitude)})
-                    }
+          this.MapWithADirectionsRenderer = compose(
+              withProps({
+                  googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places",
+                  loadingElement: <div style={{height: `100%`}}/>,
+                  containerElement: <div style={{height: `100%`}}/>,
+                  mapElement: <div style={{zIndex: '1', height: `100%`}}/>,
+              }),
+              withScriptjs,
+              withGoogleMap,
+              lifecycle({
+                  componentDidMount() {
+                      const DirectionsService = new google.maps.DirectionsService();
 
-                    DirectionsService.route({
-                        // origin: new google.maps.LatLng(points[0].latitude, points[0].longitude),
-                        origin: new google.maps.LatLng(points[0].latitude, points[0].longitude),
-                        destination: new google.maps.LatLng(points[points.length - 1].latitude, points[points.length - 1].longitude),
-                        travelMode: google.maps.TravelMode.BICYCLING,
-                        waypoints: myWaypoints
-                    }, (result, status) => {
-                        if (status === google.maps.DirectionsStatus.OK) {
-                            this.setState({
-                                directions: result,
-                            });
-                        } else {
-                            console.error(`error fetching directions ${result}`);
-                        }
-                    });
-                },
-            })
-        )(props =>
-            <GoogleMap
-                defaultZoom={13}
-                defaultCenter={new google.maps.LatLng(latitudeCenter, longitudeCenter)}
-            >
-                {props.directions && <DirectionsRenderer directions={props.directions}/>}
-            </GoogleMap>
-        );
+                      let myWaypoints = [];
+                      for (let i = 1; i < points.length - 1; i++) {
+                          myWaypoints.push({location: new google.maps.LatLng(points[i].latitude, points[i].longitude)})
+                      }
 
+                      DirectionsService.route({
+                          // origin: new google.maps.LatLng(points[0].latitude, points[0].longitude),
+                          origin: new google.maps.LatLng(points[0].latitude, points[0].longitude),
+                          destination: new google.maps.LatLng(points[points.length - 1].latitude, points[points.length - 1].longitude),
+                          travelMode: google.maps.TravelMode.BICYCLING,
+                          waypoints: myWaypoints
+                      }, (result, status) => {
+                          if (status === google.maps.DirectionsStatus.OK) {
+                              this.setState({
+                                  directions: result,
+                              });
+                          } else {
+                              console.error(`error fetching directions ${result}`);
+                          }
+                      });
+                  },
+              })
+          )(props =>
+              <GoogleMap
+                  defaultZoom={13}
+                  defaultCenter={new google.maps.LatLng(latitudeCenter, longitudeCenter)}
+              >
+                  {props.directions && <DirectionsRenderer directions={props.directions}/>}
+              </GoogleMap>
+          );
+        }
 
         return (
             <div style={{position: 'absolute', width: '100%', height: '100%'}}>
@@ -155,21 +164,31 @@ class MapWithRoute extends React.PureComponent {
                         <Grid
                             container
                             alignItems="center"
-                            onClick={this.props.returnToForm}
-                            style={{height: "3em", width: "100%", cursor: "pointer"}}
+                            justify="space-between"
+                            style={{height: "3em", width: "100%"}}
+                            direction="row"
                         >
-                            <ChevronLeftIcon style={{marginLeft: "1em"}}/>
+                              <ChevronLeftIcon onClick={this.props.returnToForm} style={{marginLeft: "1em"}}/>
+                              { this.state.detailsVisible ?
+                                (<ExpandLessIcon onClick={this.toggleDetails} style={{marginRight: "1em"}}/>)
+                                :
+                                (<ExpandMoreIcon onClick={this.toggleDetails} style={{marginRight: "1em"}}/>)
+                              }
                         </Grid>
-                        <Divider/>
-                        <div style={{margin: "1em"}}>
-                            {route}
+                        { this.state.detailsVisible &&
+                        <div>
+                          <Divider/>
+                          <div style={{margin: "1em"}}>
+                              {route}
+                          </div>
+                          <Divider/>
+                          <div style={{margin: "1em"}}>
+                              <Grid container justify="center" alignItems="center">
+                                  <Grid item>Pełen czas podróży: {time} minut</Grid>
+                              </Grid>
+                          </div>
                         </div>
-                        <Divider/>
-                        <div style={{margin: "1em"}}>
-                            <Grid container justify="center" alignItems="center">
-                                <Grid item>Pełen czas podróży: {time} minut</Grid>
-                            </Grid>
-                        </div>
+                        }
                     </Paper>
 
                 </MediaQuery>
@@ -205,7 +224,7 @@ class MapWithRoute extends React.PureComponent {
 
                 </MediaQuery>
 
-                <MapWithADirectionsRenderer ref={map => map && map.fitBounds(bounds)}
+                <this.MapWithADirectionsRenderer ref={map => map && map.fitBounds(bounds)}
                 />
             </div>
         )

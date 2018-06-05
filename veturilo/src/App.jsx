@@ -142,7 +142,7 @@ class App extends Component {
     render() {
         const {classes} = this.props;
         return (
-            <div style={{backgroundImage: "url('map.jpg')", height: this.state.height, position: 'relative'}}>
+            <div style={{height: this.state.height, position: 'relative'}}>
                 <Grid container direction="row" alignItems="center" justify="center" style={{position: 'absolute'}}>
                     <Grid item>
                         <Paper className={classes.paper}>
