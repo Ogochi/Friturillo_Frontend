@@ -61,7 +61,7 @@ class NetworkErrorModal extends Component {
               color="primary"
               onClick={this.props.onRetry}
             >
-              Retry
+              Ponów
             </Button>
             <Button
               style={{width: "5em"}}
@@ -69,7 +69,7 @@ class NetworkErrorModal extends Component {
               color="secondary"
               onClick={this.props.onCancell}
             >
-              Cancel
+             Anuluj
             </Button>
           </div>
         </div>
