@@ -79,25 +79,25 @@ class Description extends React.Component {
                                     <ListItemAvatar>
                                         <Avatar className={classes.purpleAvatar}>MB</Avatar>
                                     </ListItemAvatar>
-                                    <ListItemText primary="Marcin Byra" secondary="developer"/>
+                                    <ListItemText primary="Marcin Byra" secondary="Developer"/>
                                 </ListItem>
                                 <ListItem>
                                     <ListItemAvatar>
                                         <Avatar className={classes.greenAvatar}>MiO</Avatar>
                                     </ListItemAvatar>
-                                    <ListItemText primary="Michał Ołtarzewski" secondary="developer"/>
+                                    <ListItemText primary="Michał Ołtarzewski" secondary="Developer"/>
                                 </ListItem>
                                 <ListItem>
                                     <ListItemAvatar>
                                         <Avatar className={classes.blueAvatar}>MaO</Avatar>
                                     </ListItemAvatar>
-                                    <ListItemText primary="Mateusz Olko" secondary="developer"/>
+                                    <ListItemText primary="Mateusz Olko" secondary="Developer"/>
                                 </ListItem>
                                 <ListItem>
                                     <ListItemAvatar>
                                         <Avatar className={classes.orangeAvatar}>AZ</Avatar>
                                     </ListItemAvatar>
-                                    <ListItemText primary="Antoni Zawodny" secondary="developer"/>
+                                    <ListItemText primary="Antoni Zawodny" secondary="Developer"/>
                                 </ListItem>
                             </List>
                         </Grid>
