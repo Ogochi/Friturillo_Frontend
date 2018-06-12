@@ -12,4 +12,4 @@ Project requires running backend with REST Api running on port 6161. You can fin
 
 ## Info
 
-Project done as a part of course "Software Engineering" at University of Warsaw.
+Project is done as a part of course "Software Engineering" at University of Warsaw.
