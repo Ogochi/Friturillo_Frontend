@@ -8,7 +8,7 @@ Starting production: `npm run build && server -s build`
 
 ## Backend
 
-Project requires running backend with REST Api running on port 6161. You can find our backend project [here](https://github/com/tosi3k/io).
+Project requires running backend with REST Api running on port 6161. You can find our backend project [here](https://github.com/tosi3k/io).
 
 ## Info
 
